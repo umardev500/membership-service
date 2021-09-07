@@ -17,7 +17,19 @@ func NewProductRepository(product pb.ProductServiceClient) domain.ProductReposit
 	}
 }
 
-// func (p *ProductRepository)  {}
+// func (p *ProductRepository)  {
+// ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+// defer cancel()
+// }
+
+func (p *ProductRepository) FindOne(req *pb.ProductFindOneRequest) (res *pb.Product, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	res, err = p.product.FindOne(ctx, req)
+
+	return
+}
 
 func (p *ProductRepository) Delete(req *pb.ProductDeleteRequest) (res *pb.OperationResponse, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

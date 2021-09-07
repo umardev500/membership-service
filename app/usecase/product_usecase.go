@@ -15,6 +15,12 @@ func NewProductUsecase(repository domain.ProductRepository) domain.ProductUsecas
 	}
 }
 
+func (p *ProductUsecase) FindOne(req *pb.ProductFindOneRequest) (res *pb.Product, err error) {
+	res, err = p.repository.FindOne(req)
+
+	return
+}
+
 func (p *ProductUsecase) Delete(req *pb.ProductDeleteRequest) (res *pb.OperationResponse, err error) {
 	res, err = p.repository.Delete(req)
 

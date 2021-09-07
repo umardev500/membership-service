@@ -18,10 +18,22 @@ func NewProductDelivery(usecase domain.ProductUsecase, router fiber.Router) {
 	}
 
 	router.Post("/product", handler.Create)
+	router.Get("/product/:id", handler.FindOne)
 	router.Delete("/product/:id", handler.Delete)
 }
 
 // func (p *ProductDelivery) Create(ctx *fiber.Ctx) error {}
+
+func (p *ProductDelivery) FindOne(ctx *fiber.Ctx) error {
+	var id = ctx.Params("id")
+
+	res, err := p.usecase.FindOne(&pb.ProductFindOneRequest{ProductId: id})
+	if err != nil {
+		return helper.ApiResponse(ctx, 500, err.Error(), nil)
+	}
+
+	return helper.ApiResponse(ctx, 200, "Delete product", res)
+}
 
 func (p *ProductDelivery) Delete(ctx *fiber.Ctx) error {
 	var id = ctx.Params("id")
