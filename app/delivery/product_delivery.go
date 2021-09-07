@@ -60,7 +60,9 @@ func (p *ProductDelivery) FindOne(ctx *fiber.Ctx) error {
 }
 
 func (p *ProductDelivery) FindAll(ctx *fiber.Ctx) error {
-	res, err := p.usecase.FindAll(&pb.ProductFindAllRequest{})
+	search := ctx.Query("search")
+
+	res, err := p.usecase.FindAll(&pb.ProductFindAllRequest{Search: search})
 	return p.handleResponse(ctx, err, 200, "Find all products", res)
 }
 
