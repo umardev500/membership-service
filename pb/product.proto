@@ -56,8 +56,8 @@ message ProductFindAllResponse {
 
 service ProductService {
     rpc Create(ProductCreateRequest) returns (Empty) {}
-    rpc Delete(ProductDeleteRequest) returns (OperationResponse) {}
-    rpc Update(ProductUpdateRequest) returns (OperationResponse) {}
     rpc FindOne(ProductFindOneRequest) returns (Product) {}
     rpc FindAll(ProductFindAllRequest) returns (ProductFindAllResponse) {}
+    rpc Update(ProductUpdateRequest) returns (OperationResponse) {}
+    rpc Delete(ProductDeleteRequest) returns (OperationResponse) {}
 }
