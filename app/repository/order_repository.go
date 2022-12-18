@@ -18,8 +18,10 @@ func NewOrderRepository(order pb.OrderServiceClient) domain.OrderRepository {
 
 // func (o *OrderRepository) {}
 
-func (o *OrderRepository) FindAll(ctx context.Context, req *pb.OrderFindAllRequest) (res *pb.OrderFindAllResponse, err error) {
-	res, err = o.order.FindAll(ctx, req)
+func (o *OrderRepository) FindOne(ctx context.Context, req *pb.OrderFindOneRequest) (*pb.Order, error) {
+	return o.order.FindOne(ctx, req)
+}
 
-	return
+func (o *OrderRepository) FindAll(ctx context.Context, req *pb.OrderFindAllRequest) (res *pb.OrderFindAllResponse, err error) {
+	return o.order.FindAll(ctx, req)
 }

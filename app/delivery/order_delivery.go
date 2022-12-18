@@ -18,6 +18,7 @@ func NewOrderDelivery(usecase domain.OrderUsecase, router fiber.Router) {
 	}
 
 	router.Get("/orders", handler.FindAll)
+	router.Get("/orders/:id", handler.FindOne)
 }
 
 func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, message string, data interface{}) error {
@@ -28,6 +29,14 @@ func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, me
 }
 
 // func (o *OrderDelivery) FindAll(ctx *fiber.Ctx) error {}
+
+func (o *OrderDelivery) FindOne(ctx *fiber.Ctx) error {
+	var id = ctx.Params("id")
+	reqContext := ctx.Context()
+	res, err := o.usecase.FindOne(reqContext, &pb.OrderFindOneRequest{OrderId: id})
+
+	return o.handleResponse(ctx, err, 200, "Find order", res)
+}
 
 func (o *OrderDelivery) FindAll(ctx *fiber.Ctx) error {
 	sort := ctx.Query("sort", "asc")
