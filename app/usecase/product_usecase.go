@@ -16,27 +16,18 @@ func NewProductUsecase(repository domain.ProductRepository) domain.ProductUsecas
 }
 
 // func (p *ProductUsecase) {}
-func (p *ProductUsecase) FindAll(req *pb.ProductFindAllRequest) (res *pb.ProductFindAllResponse, err error) {
-	res, err = p.repository.FindAll(req)
-
-	return
+func (p *ProductUsecase) FindAll(req *pb.ProductFindAllRequest) (*pb.ProductFindAllResponse, error) {
+	return p.repository.FindAll(req)
 }
 
-func (p *ProductUsecase) FindOne(req *pb.ProductFindOneRequest) (res *pb.Product, err error) {
-	res, err = p.repository.FindOne(req)
-
-	return
+func (p *ProductUsecase) FindOne(req *pb.ProductFindOneRequest) (*pb.Product, error) {
+	return p.repository.FindOne(req)
 }
 
-func (p *ProductUsecase) Delete(req *pb.ProductDeleteRequest) (res *pb.OperationResponse, err error) {
-	res, err = p.repository.Delete(req)
-
-	return
+func (p *ProductUsecase) Delete(req *pb.ProductDeleteRequest) (*pb.OperationResponse, error) {
+	return p.repository.Delete(req)
 }
 
-// Post product data
-func (p *ProductUsecase) Post(req *pb.ProductCreateRequest) (err error) {
-	err = p.repository.Post(req)
-
-	return
+func (p *ProductUsecase) Post(req *pb.ProductCreateRequest) error {
+	return p.repository.Post(req)
 }
