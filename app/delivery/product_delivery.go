@@ -18,9 +18,9 @@ func NewProductDelivery(usecase domain.ProductUsecase, router fiber.Router) {
 	}
 
 	router.Get("/products", handler.FindAll)
-	router.Post("/product", handler.Create)
-	router.Get("/product/:id", handler.FindOne)
-	router.Delete("/product/:id", handler.Delete)
+	router.Post("/products", handler.Create)
+	router.Get("/products/:id", handler.FindOne)
+	router.Delete("/products/:id", handler.Delete)
 }
 
 // func (p *ProductDelivery) Create(ctx *fiber.Ctx) error {}
