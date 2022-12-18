@@ -14,4 +14,5 @@ type ProductRepository interface {
 	Delete(req *pb.ProductDeleteRequest) (res *pb.OperationResponse, err error)
 	FindOne(req *pb.ProductFindOneRequest) (res *pb.Product, err error)
 	FindAll(req *pb.ProductFindAllRequest) (res *pb.ProductFindAllResponse, err error)
+	Update(req *pb.ProductUpdateRequest) (res *pb.OperationResponse, err error)
 }
