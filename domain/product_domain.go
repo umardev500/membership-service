@@ -12,6 +12,8 @@ type ProductUsecase interface {
 	FindOne(req *pb.ProductFindOneRequest) (res *pb.Product, err error)
 	// FindAll retrieves all products from the repository.
 	FindAll(req *pb.ProductFindAllRequest) (res *pb.ProductFindAllResponse, err error)
+	// Update updates a product in the repository.
+	Update(req *pb.ProductUpdateRequest) (res *pb.OperationResponse, err error)
 }
 
 // ProductRepository is an interface that defines the methods for interacting with a repository of products.

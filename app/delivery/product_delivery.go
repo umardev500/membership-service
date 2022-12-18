@@ -21,6 +21,7 @@ func NewProductDelivery(usecase domain.ProductUsecase, router fiber.Router) {
 	router.Post("/products", handler.Create)
 	router.Get("/products/:id", handler.FindOne)
 	router.Delete("/products/:id", handler.Delete)
+	router.Put("/products/:id", handler.Update)
 }
 
 // func (p *ProductDelivery) Create(ctx *fiber.Ctx) error {}
@@ -30,6 +31,33 @@ func (p *ProductDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, 
 		return helper.ApiResponse(ctx, 500, err.Error(), nil)
 	}
 	return helper.ApiResponse(ctx, status, message, data)
+}
+
+func (p *ProductDelivery) Update(ctx *fiber.Ctx) error {
+	var id = ctx.Params("id")
+
+	var payload = new(pb.ProductUpdateRequest)
+	if err := ctx.BodyParser(&payload); err != nil {
+		return p.handleResponse(ctx, err, 500, "", nil)
+	}
+
+	detail := &pb.ProductCreateRequest{
+		Name:        payload.Detail.Name,
+		Price:       payload.Detail.Price,
+		Duration:    payload.Detail.Duration,
+		Description: payload.Detail.Description,
+	}
+
+	res, err := p.usecase.Update(&pb.ProductUpdateRequest{ProductId: id, Detail: detail})
+	if err != nil {
+		return p.handleResponse(ctx, err, 500, "", nil)
+	}
+
+	if !res.IsAffected {
+		return p.handleResponse(ctx, err, 304, "Nothing to change", nil)
+	}
+
+	return p.handleResponse(ctx, err, 200, "Update product", nil)
 }
 
 func (p *ProductDelivery) FindAll(ctx *fiber.Ctx) error {

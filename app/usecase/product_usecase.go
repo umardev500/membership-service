@@ -16,6 +16,11 @@ func NewProductUsecase(repository domain.ProductRepository) domain.ProductUsecas
 }
 
 // func (p *ProductUsecase) {}
+
+func (p *ProductUsecase) Update(req *pb.ProductUpdateRequest) (res *pb.OperationResponse, err error) {
+	return p.repository.Update(req)
+}
+
 func (p *ProductUsecase) FindAll(req *pb.ProductFindAllRequest) (*pb.ProductFindAllResponse, error) {
 	return p.repository.FindAll(req)
 }
