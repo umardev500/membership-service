@@ -18,6 +18,10 @@ func NewOrderRepository(order pb.OrderServiceClient) domain.OrderRepository {
 
 // func (o *OrderRepository) {}
 
+func (o *OrderRepository) ChangeStatus(ctx context.Context, req *pb.OrderChangeStatus) (*pb.OperationResponse, error) {
+	return o.order.ChangeStatus(ctx, req)
+}
+
 func (o *OrderRepository) FindOne(ctx context.Context, req *pb.OrderFindOneRequest) (*pb.Order, error) {
 	return o.order.FindOne(ctx, req)
 }

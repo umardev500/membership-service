@@ -19,6 +19,7 @@ func NewOrderDelivery(usecase domain.OrderUsecase, router fiber.Router) {
 
 	router.Get("/orders", handler.FindAll)
 	router.Get("/orders/:id", handler.FindOne)
+	router.Put("/orders/:id", handler.ChangeStatus)
 }
 
 func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, message string, data interface{}) error {
@@ -28,7 +29,27 @@ func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, me
 	return helper.ApiResponse(ctx, status, message, data)
 }
 
-// func (o *OrderDelivery) FindAll(ctx *fiber.Ctx) error {}
+// func (o *OrderDelivery) FindAll(ctx *fiber.Ctx) error {
+// reqContext := ctx.Context()
+// }
+
+func (o *OrderDelivery) ChangeStatus(ctx *fiber.Ctx) error {
+	var id = ctx.Params("id")
+
+	var payload = new(pb.OrderChangeStatus)
+	if err := ctx.BodyParser(&payload); err != nil {
+		return o.handleResponse(ctx, err, 500, "", nil)
+	}
+
+	reqContext := ctx.Context()
+	res, err := o.usecase.ChangeStatus(reqContext, &pb.OrderChangeStatus{OrderId: id, Status: payload.Status})
+
+	if !res.IsAffected {
+		return o.handleResponse(ctx, err, 304, "Nothing to change", nil)
+	}
+
+	return o.handleResponse(ctx, err, 200, "Change status", nil)
+}
 
 func (o *OrderDelivery) FindOne(ctx *fiber.Ctx) error {
 	var id = ctx.Params("id")
