@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func ApiResponse(ctx *fiber.Ctx, code int64, message string, data interface{}) error {
+func ApiResponse(ctx *fiber.Ctx, code int, message string, data interface{}) error {
 	var response domain.APIResponse = domain.APIResponse{
 		StatusCode: code,
 		Message:    message,
