@@ -17,6 +17,7 @@ func NewOrderDelivery(usecase domain.OrderUsecase, router fiber.Router) {
 		usecase: usecase,
 	}
 
+	router.Post("/orders", handler.Create)
 	router.Get("/orders", handler.FindAll)
 	router.Get("/orders/:id", handler.FindOne)
 	router.Put("/orders/:id", handler.ChangeStatus)
@@ -32,6 +33,38 @@ func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, me
 // func (o *OrderDelivery) FindAll(ctx *fiber.Ctx) error {
 // reqContext := ctx.Context()
 // }
+
+func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
+	var payload = new(pb.OrderCreateRequest)
+	if err := ctx.BodyParser(&payload); err != nil {
+		return o.handleResponse(ctx, err, 500, "", nil)
+	}
+
+	reqContext := ctx.Context()
+
+	products := []*pb.OrderProduct{}
+	for _, val := range payload.Product {
+		each := pb.OrderProduct{
+			ProductId:   val.ProductId,
+			Name:        val.Name,
+			Price:       val.Price,
+			Duration:    val.Duration,
+			Description: val.Description,
+		}
+		products = append(products, &each)
+	}
+
+	values := &pb.OrderCreateRequest{
+		Buyer: &pb.OrderBuyer{
+			CustomerId: payload.Buyer.CustomerId,
+			Name:       payload.Buyer.Name,
+			User:       payload.Buyer.User,
+		},
+		Product: products,
+	}
+	_, err := o.usecase.Create(reqContext, values)
+	return o.handleResponse(ctx, err, 200, "Create order", nil)
+}
 
 func (o *OrderDelivery) ChangeStatus(ctx *fiber.Ctx) error {
 	var id = ctx.Params("id")
