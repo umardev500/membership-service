@@ -23,6 +23,9 @@ func NewProductRepository(product pb.ProductServiceClient) domain.ProductReposit
 // }
 
 func (p *ProductRepository) withTimeout(dur int, f func(context.Context)) {
+	if dur == 0 {
+		dur = 10 // set default timeout duration to 10 seconds
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(dur)*time.Second)
 	defer cancel()
 
