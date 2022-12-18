@@ -22,6 +22,15 @@ func NewProductRepository(product pb.ProductServiceClient) domain.ProductReposit
 // defer cancel()
 // }
 
+func (p *ProductRepository) FindAll(req *pb.ProductFindAllRequest) (res *pb.ProductFindAllResponse, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	res, err = p.product.FindAll(ctx, req)
+
+	return
+}
+
 func (p *ProductRepository) FindOne(req *pb.ProductFindOneRequest) (res *pb.Product, err error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

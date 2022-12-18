@@ -17,12 +17,22 @@ func NewProductDelivery(usecase domain.ProductUsecase, router fiber.Router) {
 		usecase: usecase,
 	}
 
+	router.Get("/products", handler.FindAll)
 	router.Post("/product", handler.Create)
 	router.Get("/product/:id", handler.FindOne)
 	router.Delete("/product/:id", handler.Delete)
 }
 
 // func (p *ProductDelivery) Create(ctx *fiber.Ctx) error {}
+
+func (p *ProductDelivery) FindAll(ctx *fiber.Ctx) error {
+	res, err := p.usecase.FindAll(&pb.ProductFindAllRequest{})
+	if err != nil {
+		return helper.ApiResponse(ctx, 500, err.Error(), nil)
+	}
+
+	return helper.ApiResponse(ctx, 200, "Find all products", res)
+}
 
 func (p *ProductDelivery) FindOne(ctx *fiber.Ctx) error {
 	var id = ctx.Params("id")
