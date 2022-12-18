@@ -25,45 +25,44 @@ func NewProductDelivery(usecase domain.ProductUsecase, router fiber.Router) {
 
 // func (p *ProductDelivery) Create(ctx *fiber.Ctx) error {}
 
-func (p *ProductDelivery) FindAll(ctx *fiber.Ctx) error {
-	res, err := p.usecase.FindAll(&pb.ProductFindAllRequest{})
+func (p *ProductDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, message string, data interface{}) error {
 	if err != nil {
 		return helper.ApiResponse(ctx, 500, err.Error(), nil)
 	}
+	return helper.ApiResponse(ctx, status, message, data)
+}
 
-	return helper.ApiResponse(ctx, 200, "Find all products", res)
+func (p *ProductDelivery) FindAll(ctx *fiber.Ctx) error {
+	res, err := p.usecase.FindAll(&pb.ProductFindAllRequest{})
+	return p.handleResponse(ctx, err, 200, "Find all products", res)
 }
 
 func (p *ProductDelivery) FindOne(ctx *fiber.Ctx) error {
 	var id = ctx.Params("id")
 
 	res, err := p.usecase.FindOne(&pb.ProductFindOneRequest{ProductId: id})
-	if err != nil {
-		return helper.ApiResponse(ctx, 500, err.Error(), nil)
-	}
-
-	return helper.ApiResponse(ctx, 200, "Delete product", res)
+	return p.handleResponse(ctx, err, 200, "Find one product", res)
 }
 
 func (p *ProductDelivery) Delete(ctx *fiber.Ctx) error {
 	var id = ctx.Params("id")
 	res, err := p.usecase.Delete(&pb.ProductDeleteRequest{ProductId: id})
 	if err != nil {
-		return helper.ApiResponse(ctx, 500, err.Error(), nil)
+		return p.handleResponse(ctx, err, 500, "", nil)
 	}
 
 	if !res.IsAffected {
-		return helper.ApiResponse(ctx, 304, "Nothing to change", nil)
+		return p.handleResponse(ctx, err, 304, "Nothing to change", nil)
 	}
 
-	return helper.ApiResponse(ctx, 200, "Delete product", nil)
+	return p.handleResponse(ctx, err, 200, "Delete product", nil)
 }
 
 func (p *ProductDelivery) Create(ctx *fiber.Ctx) error {
 	var payload = new(pb.ProductCreateRequest)
 
 	if err := ctx.BodyParser(&payload); err != nil {
-		return helper.ApiResponse(ctx, 500, err.Error(), nil)
+		return p.handleResponse(ctx, err, 500, "", nil)
 	}
 
 	product := &pb.ProductCreateRequest{
@@ -74,9 +73,5 @@ func (p *ProductDelivery) Create(ctx *fiber.Ctx) error {
 	}
 
 	err := p.usecase.Post(product)
-	if err != nil {
-		return helper.ApiResponse(ctx, 500, err.Error(), nil)
-	}
-
-	return helper.ApiResponse(ctx, 200, "Create product", nil)
+	return p.handleResponse(ctx, err, 200, "Create product", nil)
 }
