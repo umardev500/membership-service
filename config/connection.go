@@ -31,3 +31,11 @@ func (c *Connection) ProductConn() (client pb.ProductServiceClient) {
 
 	return
 }
+
+func (c *Connection) OrderConn() (client pb.OrderServiceClient) {
+	port := os.Getenv("ORDER_RPC_PORT")
+	conn := c.getConn(port)
+	client = pb.NewOrderServiceClient(conn)
+
+	return
+}

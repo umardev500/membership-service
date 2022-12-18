@@ -19,6 +19,7 @@ func main() {
 
 	conns := config.NewConn()
 	product := conns.ProductConn()
+	order := conns.OrderConn()
 
 	port := os.Getenv("PORT")
 
@@ -28,6 +29,7 @@ func main() {
 	api := app.Group("api")
 
 	injector.NewProductInjector(product, api)
+	injector.NewOrderInjector(order, api)
 
 	fmt.Printf("⚡️[server]: Server is running on porting %s\n", port)
 
