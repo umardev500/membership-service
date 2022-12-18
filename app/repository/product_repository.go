@@ -36,18 +36,10 @@ func (p *ProductRepository) withTimeout(dur int, f func(context.Context)) {
 	f(ctx)
 }
 
-// Update updates a product in the repository.
-func (p *ProductRepository) Update(req *pb.ProductUpdateRequest) (res *pb.OperationResponse, err error) {
+// Post creates a new product in the repository.
+func (p *ProductRepository) Post(req *pb.ProductCreateRequest) (err error) {
 	p.withTimeout(0, func(ctx context.Context) {
-		res, err = p.product.Update(ctx, req)
-	})
-	return
-}
-
-// FindAll retrieves all products from the repository.
-func (p *ProductRepository) FindAll(req *pb.ProductFindAllRequest) (res *pb.ProductFindAllResponse, err error) {
-	p.withTimeout(15, func(ctx context.Context) {
-		res, err = p.product.FindAll(ctx, req)
+		_, err = p.product.Create(ctx, req)
 	})
 	return
 }
@@ -60,18 +52,26 @@ func (p *ProductRepository) FindOne(req *pb.ProductFindOneRequest) (res *pb.Prod
 	return
 }
 
-// Delete removes a product from the repository.
-func (p *ProductRepository) Delete(req *pb.ProductDeleteRequest) (res *pb.OperationResponse, err error) {
-	p.withTimeout(0, func(ctx context.Context) {
-		res, err = p.product.Delete(ctx, req)
+// FindAll retrieves all products from the repository.
+func (p *ProductRepository) FindAll(req *pb.ProductFindAllRequest) (res *pb.ProductFindAllResponse, err error) {
+	p.withTimeout(15, func(ctx context.Context) {
+		res, err = p.product.FindAll(ctx, req)
 	})
 	return
 }
 
-// Post creates a new product in the repository.
-func (p *ProductRepository) Post(req *pb.ProductCreateRequest) (err error) {
+// Update updates a product in the repository.
+func (p *ProductRepository) Update(req *pb.ProductUpdateRequest) (res *pb.OperationResponse, err error) {
 	p.withTimeout(0, func(ctx context.Context) {
-		_, err = p.product.Create(ctx, req)
+		res, err = p.product.Update(ctx, req)
+	})
+	return
+}
+
+// Delete removes a product from the repository.
+func (p *ProductRepository) Delete(req *pb.ProductDeleteRequest) (res *pb.OperationResponse, err error) {
+	p.withTimeout(0, func(ctx context.Context) {
+		res, err = p.product.Delete(ctx, req)
 	})
 	return
 }
