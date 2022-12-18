@@ -17,11 +17,12 @@ func NewProductDelivery(usecase domain.ProductUsecase, router fiber.Router) {
 		usecase: usecase,
 	}
 
-	router.Get("/products", handler.FindAll)
 	router.Post("/products", handler.Create)
+	router.Get("/products", handler.FindAll)
 	router.Get("/products/:id", handler.FindOne)
-	router.Delete("/products/:id", handler.Delete)
 	router.Put("/products/:id", handler.Update)
+	router.Delete("/products/:id", handler.Delete)
+
 }
 
 // func (p *ProductDelivery) Create(ctx *fiber.Ctx) error {}
@@ -35,7 +36,6 @@ func (p *ProductDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, 
 
 func (p *ProductDelivery) Update(ctx *fiber.Ctx) error {
 	var id = ctx.Params("id")
-
 	var payload = new(pb.ProductUpdateRequest)
 	if err := ctx.BodyParser(&payload); err != nil {
 		return p.handleResponse(ctx, err, 500, "", nil)
