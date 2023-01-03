@@ -25,7 +25,7 @@ func NewOrderDelivery(usecase domain.OrderUsecase, router fiber.Router) {
 
 func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, message string, data interface{}) error {
 	if err != nil {
-		return helper.ApiResponse(ctx, status, err.Error(), nil)
+		return helper.ApiResponse(ctx, 500, err.Error(), nil)
 	}
 	return helper.ApiResponse(ctx, status, message, data)
 }
