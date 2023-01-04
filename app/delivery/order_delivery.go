@@ -10,12 +10,14 @@ import (
 )
 
 type OrderDelivery struct {
-	usecase domain.OrderUsecase
+	usecase   domain.OrderUsecase
+	pgUsecase domain.PGUsecase
 }
 
-func NewOrderDelivery(usecase domain.OrderUsecase, router fiber.Router) {
+func NewOrderDelivery(usecase domain.OrderUsecase, pgUsecase domain.PGUsecase, router fiber.Router) {
 	handler := &OrderDelivery{
-		usecase: usecase,
+		usecase:   usecase,
+		pgUsecase: pgUsecase,
 	}
 
 	router.Post("/orders", handler.Create)
