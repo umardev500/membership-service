@@ -58,7 +58,6 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (respo
 
 func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 	paymentType := ctx.Query("payment_type")
-	var payment *pb.OrderPayment
 	var paymentResponse *domain.BankPaymentResponse
 
 	var payload = new(domain.OrderBankPermataRequest)
@@ -72,16 +71,6 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		paymentResponse = pgResp
 		if err != nil {
 			return o.handleResponse(ctx, err, 500, "", nil)
-		}
-	}
-
-	if paymentResponse != nil {
-		payment = &pb.OrderPayment{
-			PaymentType: paymentResponse.PaymentType,
-			OrderId:     paymentResponse.OrderId,
-			Bank:        paymentResponse.Bank,
-			VaNumber:    paymentResponse.VaNumber,
-			GrossAmount: paymentResponse.GrossAmount,
 		}
 	}
 
@@ -99,12 +88,25 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		products = append(products, &each)
 	}
 
+	buyer := &pb.OrderBuyer{
+		CustomerId: payload.Buyer.CustomerId,
+		Name:       payload.Buyer.Name,
+		User:       payload.Buyer.User,
+	}
+
+	var payment *pb.OrderPayment
+	if paymentResponse != nil {
+		payment = &pb.OrderPayment{
+			PaymentType: paymentResponse.PaymentType,
+			OrderId:     paymentResponse.OrderId,
+			Bank:        paymentResponse.Bank,
+			VaNumber:    paymentResponse.VaNumber,
+			GrossAmount: paymentResponse.GrossAmount,
+		}
+	}
+
 	values := &pb.OrderCreateRequest{
-		Buyer: &pb.OrderBuyer{
-			CustomerId: payload.Buyer.CustomerId,
-			Name:       payload.Buyer.Name,
-			User:       payload.Buyer.User,
-		},
+		Buyer:   buyer,
 		Product: products,
 		Payment: payment,
 	}
