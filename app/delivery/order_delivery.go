@@ -1,7 +1,6 @@
 package delivery
 
 import (
-	"errors"
 	"membership/domain"
 	"membership/helper"
 	"membership/pb"
@@ -46,40 +45,13 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (respo
 	}
 
 	payloadMap := payload.(map[string]interface{})
+
 	var payment map[string]interface{}
 	if payloadMap["payment"] != nil {
 		payment = payloadMap["payment"].(map[string]interface{})
 	}
 
-	if payment != nil {
-		bankTransfer := payment["bank_transfer"].(map[string]interface{})
-		bank := bankTransfer["bank"]
-
-		if bank == "permata" {
-
-			resp, err := o.pgUsecase.BankCharge(bank.(string), orderId, payment)
-			if err != nil {
-				return nil, err
-			}
-			respCast := resp.(domain.PermataResponse)
-
-			response = &domain.BankPaymentResponse{
-				OrderId:     orderId,
-				PaymentType: respCast.PaymentType,
-				Bank:        "permata",
-				VaNumber:    respCast.PermataVaNumber,
-				GrossAmount: helper.RemovePriceDot(respCast.GrossAmount),
-			}
-
-			statusCode, err := strconv.Atoi(respCast.StatusCode)
-			if !(statusCode < 200 || statusCode > 300 || statusCode == 300) {
-				return nil, err
-			} else {
-				err = errors.New(respCast.StatusMessage)
-				return nil, err
-			}
-		}
-	}
+	o.pgUsecase.BankCharge(orderId, payment)
 
 	return response, nil
 }

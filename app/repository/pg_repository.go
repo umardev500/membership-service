@@ -20,10 +20,10 @@ func NewPGRepository(chargeURL, authString string) domain.PGRepository {
 	}
 }
 
-func (p *PGRepository) BankPermataCharge(orderId string, data interface{}) (permataResponse domain.PermataResponse, err error) {
+func (p *PGRepository) BankPermataCharge(orderId string, payment map[string]interface{}) (permataResponse domain.PermataResponse, err error) {
 	var permataRequest domain.PermataRequest
 
-	jsonStr, err := json.Marshal(data)
+	jsonStr, err := json.Marshal(payment)
 	if err != nil {
 		return
 	}

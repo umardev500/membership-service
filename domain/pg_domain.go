@@ -38,9 +38,9 @@ type PermataResponse struct {
 }
 
 type PGUsecase interface {
-	BankCharge(bank, orderId string, data interface{}) (interface{}, error)
+	BankCharge(orderId string, payment map[string]interface{}) (interface{}, error)
 }
 
 type PGRepository interface {
-	BankPermataCharge(orderId string, data interface{}) (PermataResponse, error)
+	BankPermataCharge(orderId string, payment map[string]interface{}) (PermataResponse, error)
 }
