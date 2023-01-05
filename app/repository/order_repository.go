@@ -18,7 +18,7 @@ func NewOrderRepository(order pb.OrderServiceClient) domain.OrderRepository {
 
 // func (o *OrderRepository) {}
 
-func (o *OrderRepository) Create(ctx context.Context, orderId string, req *pb.OrderCreateRequest) (*pb.Empty, error) {
+func (o *OrderRepository) Create(ctx context.Context, req *pb.OrderCreateRequest) (*pb.Empty, error) {
 	return o.order.Create(ctx, req)
 }
 

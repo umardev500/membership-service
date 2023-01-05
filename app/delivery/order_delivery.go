@@ -110,7 +110,7 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		},
 		Product: products,
 	}
-	_, err := o.usecase.Create(reqContext, orderId, values)
+	_, err := o.usecase.Create(reqContext, values)
 	return o.handleResponse(ctx, err, 200, "Create order", nil)
 }
 
