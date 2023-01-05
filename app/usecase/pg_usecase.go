@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 	"membership/domain"
 	"membership/helper"
 	"strconv"
@@ -23,7 +22,6 @@ func (p *pgUsecase) chargePermata(orderId string, payment map[string]interface{}
 	}
 	statusCode, _ := strconv.Atoi(response.StatusCode)
 	if !(statusCode >= 200 && statusCode < 300) {
-		fmt.Println("Error status code")
 		return errors.New(response.StatusMessage)
 	}
 
