@@ -22,19 +22,23 @@ type PermataRequest struct {
 	} `json:"transaction_details"`
 }
 
-type PermataResponse struct {
+type BankResponse struct {
 	StatusCode        string `json:"status_code"`
 	StatusMessage     string `json:"status_message"`
-	TransactionId     string `json:"transaction_id"`
-	OrderId           string `json:"order_id"`
+	TransactionID     string `json:"transaction_id"`
+	OrderID           string `json:"order_id"`
 	GrossAmount       string `json:"gross_amount"`
-	Currency          string `json:"currency"`
 	PaymentType       string `json:"payment_type"`
 	TransactionTime   string `json:"transaction_time"`
 	TransactionStatus string `json:"transaction_status"`
 	FraudStatus       string `json:"fraud_status"`
-	PermataVaNumber   string `json:"permata_va_number"`
-	MerchantId        string `json:"merchant_id"`
+	Currency          string `json:"currency"`
+	VaNumbers         []struct {
+		Bank     string `json:"bank"`
+		VaNumber string `json:"va_number"`
+	} `json:"va_numbers"`
+	PermataVaNumber string `json:"permata_va_number"`
+	MerchantID      string `json:"merchant_id"`
 }
 
 type PGUsecase interface {
@@ -42,5 +46,5 @@ type PGUsecase interface {
 }
 
 type PGRepository interface {
-	BankPermataCharge(orderId string, payment map[string]interface{}) (PermataResponse, error)
+	BankPermataCharge(orderId string, payment map[string]interface{}) (BankResponse, error)
 }

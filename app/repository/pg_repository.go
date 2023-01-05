@@ -20,7 +20,7 @@ func NewPGRepository(chargeURL, authString string) domain.PGRepository {
 	}
 }
 
-func (p *PGRepository) BankPermataCharge(orderId string, payment map[string]interface{}) (permataResponse domain.PermataResponse, err error) {
+func (p *PGRepository) BankPermataCharge(orderId string, payment map[string]interface{}) (bankResponse domain.BankResponse, err error) {
 	var permataRequest domain.PermataRequest
 
 	jsonStr, err := json.Marshal(payment)
@@ -66,7 +66,7 @@ func (p *PGRepository) BankPermataCharge(orderId string, payment map[string]inte
 	}
 	defer resp.Body.Close()
 
-	err = json.NewDecoder(resp.Body).Decode(&permataResponse)
+	err = json.NewDecoder(resp.Body).Decode(&bankResponse)
 	if err != nil {
 		return
 	}
