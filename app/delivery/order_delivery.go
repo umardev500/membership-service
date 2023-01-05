@@ -57,7 +57,7 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) {
 
 		if bank == "permata" {
 
-			resp, _ := o.pgUsecase.BankCharge(bank.(string), orderId, payment)
+			resp, _ := o.pgUsecase.BankCharge(bank.(string), "09234", payment)
 			respCast := resp.(domain.PermataResponse)
 			fmt.Println("cast", respCast)
 		}
