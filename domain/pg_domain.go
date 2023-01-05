@@ -1,5 +1,13 @@
 package domain
 
+type BankPaymentResponse struct {
+	PaymentType string
+	OrderId     string
+	Bank        string
+	VaNumber    string
+	GrossAmount int64
+}
+
 type PermataRequest struct {
 	PaymentType  string `json:"payment_type"`
 	BankTransfer struct {

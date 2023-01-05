@@ -39,7 +39,7 @@ func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, me
 // reqContext := ctx.Context()
 // }
 
-func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (err error) {
+func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (response *domain.BankPaymentResponse, err error) {
 	var payload interface{}
 	if err = ctx.BodyParser(&payload); err != nil {
 		return
@@ -59,25 +59,36 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (err e
 
 			resp, err := o.pgUsecase.BankCharge(bank.(string), orderId, payment)
 			if err != nil {
-				return err
+				return nil, err
 			}
 			respCast := resp.(domain.PermataResponse)
+
+			grossAmount := 54000
+			response = &domain.BankPaymentResponse{
+				OrderId:     orderId,
+				PaymentType: respCast.PaymentType,
+				Bank:        "permata",
+				VaNumber:    respCast.PermataVaNumber,
+				GrossAmount: int64(grossAmount),
+			}
+
 			statusCode, err := strconv.Atoi(respCast.StatusCode)
 			if !(statusCode < 200 || statusCode > 300 || statusCode == 300) {
-				return err
+				return nil, err
 			} else {
 				err = errors.New(respCast.StatusMessage)
-				return err
+				return nil, err
 			}
 		}
 	}
 
-	return nil
+	return response, nil
 }
 
 func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 	paymentType := ctx.Query("payment_type")
 	var payment *pb.OrderPayment
+	var paymentResponse *domain.BankPaymentResponse
 
 	var payload = new(domain.OrderBankPermataRequest)
 	if err := ctx.BodyParser(&payload); err != nil {
@@ -86,17 +97,20 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 	orderId := strconv.Itoa(int(time.Now().UTC().UnixNano()))
 
 	if paymentType == "bank" {
-		err := o.createBankPayment(ctx, orderId)
+		pgResp, err := o.createBankPayment(ctx, orderId)
+		paymentResponse = pgResp
 		if err != nil {
 			return o.handleResponse(ctx, err, 500, "", nil)
 		}
+	}
 
+	if paymentResponse != nil {
 		payment = &pb.OrderPayment{
-			PaymentType: "bank",
-			OrderId:     "2131231232132",
-			Bank:        "bri",
-			VaNumber:    "123123213123",
-			GrossAmount: 45000,
+			PaymentType: paymentResponse.PaymentType,
+			OrderId:     paymentResponse.OrderId,
+			Bank:        paymentResponse.Bank,
+			VaNumber:    paymentResponse.VaNumber,
+			GrossAmount: paymentResponse.GrossAmount,
 		}
 	}
 
