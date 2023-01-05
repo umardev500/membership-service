@@ -57,14 +57,17 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (err e
 
 		if bank == "permata" {
 
-			resp, _ := o.pgUsecase.BankCharge(bank.(string), orderId, payment)
+			resp, err := o.pgUsecase.BankCharge(bank.(string), orderId, payment)
+			if err != nil {
+				return err
+			}
 			respCast := resp.(domain.PermataResponse)
-			statusCode, _ := strconv.Atoi(respCast.StatusCode)
+			statusCode, err := strconv.Atoi(respCast.StatusCode)
 			if !(statusCode < 200 || statusCode > 300 || statusCode == 300) {
-				return
+				return err
 			} else {
 				err = errors.New(respCast.StatusMessage)
-				return
+				return err
 			}
 		}
 	}
@@ -74,6 +77,7 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (err e
 
 func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 	paymentType := ctx.Query("payment_type")
+	var payment *pb.OrderPayment
 
 	var payload = new(domain.OrderBankPermataRequest)
 	if err := ctx.BodyParser(&payload); err != nil {
@@ -85,6 +89,14 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		err := o.createBankPayment(ctx, orderId)
 		if err != nil {
 			return o.handleResponse(ctx, err, 500, "", nil)
+		}
+
+		payment = &pb.OrderPayment{
+			PaymentType: "bank",
+			OrderId:     "2131231232132",
+			Bank:        "bri",
+			VaNumber:    "123123213123",
+			GrossAmount: 45000,
 		}
 	}
 
@@ -109,6 +121,7 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 			User:       payload.Buyer.User,
 		},
 		Product: products,
+		Payment: payment,
 	}
 	_, err := o.usecase.Create(reqContext, values)
 	return o.handleResponse(ctx, err, 200, "Create order", nil)
