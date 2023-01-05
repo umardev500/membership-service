@@ -12,10 +12,12 @@ func NewPGUsecase(repo domain.PGRepository) domain.PGUsecase {
 	return &pgUsecase{repo: repo}
 }
 
-func (p *pgUsecase) BankCharge() (resp interface{}, err error) {
-	resp, err = p.repo.BankPermataCharge()
-	if err != nil {
-		return
+func (p *pgUsecase) BankCharge(bank, orderId string, data interface{}) (resp interface{}, err error) {
+	if bank == "permata" {
+		resp, err = p.repo.BankPermataCharge(orderId, data)
+		if err != nil {
+			return
+		}
 	}
 
 	return

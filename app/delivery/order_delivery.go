@@ -1,10 +1,12 @@
 package delivery
 
 import (
+	"fmt"
 	"membership/domain"
 	"membership/helper"
 	"membership/pb"
 	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -37,11 +39,38 @@ func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, me
 // reqContext := ctx.Context()
 // }
 
+func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) {
+	var payload interface{}
+	if err := ctx.BodyParser(&payload); err != nil {
+		fmt.Println(err)
+	}
+
+	payloadMap := payload.(map[string]interface{})
+	var payment map[string]interface{}
+	if payloadMap["payment"] != nil {
+		payment = payloadMap["payment"].(map[string]interface{})
+	}
+
+	if payment != nil {
+		bankTransfer := payment["bank_transfer"].(map[string]interface{})
+		bank := bankTransfer["bank"]
+
+		if bank == "permata" {
+
+			resp, _ := o.pgUsecase.BankCharge(bank.(string), orderId, payment)
+			respCast := resp.(domain.PermataResponse)
+			fmt.Println("cast", respCast)
+		}
+	}
+}
+
 func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
-	var payload = new(pb.OrderCreateRequest)
+	var payload = new(domain.OrderBankPermataRequest)
 	if err := ctx.BodyParser(&payload); err != nil {
 		return o.handleResponse(ctx, err, 500, "", nil)
 	}
+	orderId := strconv.Itoa(int(time.Now().UTC().UnixNano()))
+	o.createBankPayment(ctx, orderId)
 
 	reqContext := ctx.Context()
 
