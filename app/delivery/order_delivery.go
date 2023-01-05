@@ -51,9 +51,9 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (respo
 		payment = payloadMap["payment"].(map[string]interface{})
 	}
 
-	o.pgUsecase.BankCharge(orderId, payment)
+	response, err = o.pgUsecase.BankCharge(orderId, payment)
 
-	return response, nil
+	return
 }
 
 func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {

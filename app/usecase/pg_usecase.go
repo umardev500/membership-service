@@ -12,14 +12,24 @@ func NewPGUsecase(repo domain.PGRepository) domain.PGUsecase {
 	return &pgUsecase{repo: repo}
 }
 
-func (p *pgUsecase) chargePermata(orderId string, payment map[string]interface{}) {
+func (p *pgUsecase) chargePermata(orderId string, payment map[string]interface{}, resp *domain.BankPaymentResponse) (err error) {
 	// _, err := p.repo.BankPermataCharge(orderId, payment)
 	// if err != nil {
 	// 	return
 	// }
+	resp.PaymentType = "bank_transfer"
+	resp.OrderId = "123123123213"
+	resp.Bank = "bni"
+	resp.VaNumber = "12321421214"
+	resp.GrossAmount = 100
+
+	return
 }
 
-func (p *pgUsecase) BankCharge(orderId string, payment map[string]interface{}) (resp interface{}, err error) {
+func (p *pgUsecase) BankCharge(orderId string, payment map[string]interface{}) (resp *domain.BankPaymentResponse, err error) {
+
+	resp = &domain.BankPaymentResponse{}
+
 	if payment["payment"] != nil {
 		payment = payment["payment"].(map[string]interface{})
 	}
@@ -29,7 +39,7 @@ func (p *pgUsecase) BankCharge(orderId string, payment map[string]interface{}) (
 		bank := bankTransfer["bank"]
 
 		if bank == "permata" {
-			p.chargePermata(orderId, payment)
+			err = p.chargePermata(orderId, payment, resp)
 		}
 	}
 
