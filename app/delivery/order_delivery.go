@@ -63,13 +63,12 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (respo
 			}
 			respCast := resp.(domain.PermataResponse)
 
-			grossAmount := 54000
 			response = &domain.BankPaymentResponse{
 				OrderId:     orderId,
 				PaymentType: respCast.PaymentType,
 				Bank:        "permata",
 				VaNumber:    respCast.PermataVaNumber,
-				GrossAmount: int64(grossAmount),
+				GrossAmount: helper.RemovePriceDot(respCast.GrossAmount),
 			}
 
 			statusCode, err := strconv.Atoi(respCast.StatusCode)
