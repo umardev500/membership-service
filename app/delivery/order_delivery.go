@@ -73,15 +73,19 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (err e
 }
 
 func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
+	paymentType := ctx.Query("payment_type")
+
 	var payload = new(domain.OrderBankPermataRequest)
 	if err := ctx.BodyParser(&payload); err != nil {
 		return o.handleResponse(ctx, err, 500, "", nil)
 	}
 	orderId := strconv.Itoa(int(time.Now().UTC().UnixNano()))
 
-	err := o.createBankPayment(ctx, orderId)
-	if err != nil {
-		return o.handleResponse(ctx, err, 500, "", nil)
+	if paymentType == "bank" {
+		err := o.createBankPayment(ctx, orderId)
+		if err != nil {
+			return o.handleResponse(ctx, err, 500, "", nil)
+		}
 	}
 
 	reqContext := ctx.Context()
@@ -106,7 +110,7 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		},
 		Product: products,
 	}
-	_, err = o.usecase.Create(reqContext, values)
+	_, err := o.usecase.Create(reqContext, values)
 	return o.handleResponse(ctx, err, 200, "Create order", nil)
 }
 
