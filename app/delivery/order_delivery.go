@@ -57,7 +57,7 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (err e
 
 		if bank == "permata" {
 
-			resp, _ := o.pgUsecase.BankCharge(bank.(string), "092343", payment)
+			resp, _ := o.pgUsecase.BankCharge(bank.(string), orderId, payment)
 			respCast := resp.(domain.PermataResponse)
 			statusCode, _ := strconv.Atoi(respCast.StatusCode)
 			if !(statusCode < 200 || statusCode > 300 || statusCode == 300) {
