@@ -74,6 +74,8 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		}
 	}
 
+	return ctx.JSON(paymentResponse)
+
 	reqContext := ctx.Context()
 
 	products := []*pb.OrderProduct{}

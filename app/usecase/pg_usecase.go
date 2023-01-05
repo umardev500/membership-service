@@ -1,7 +1,11 @@
 package usecase
 
 import (
+	"errors"
+	"fmt"
 	"membership/domain"
+	"membership/helper"
+	"strconv"
 )
 
 type pgUsecase struct {
@@ -13,21 +17,26 @@ func NewPGUsecase(repo domain.PGRepository) domain.PGUsecase {
 }
 
 func (p *pgUsecase) chargePermata(orderId string, payment map[string]interface{}, resp *domain.BankPaymentResponse) (err error) {
-	// _, err := p.repo.BankPermataCharge(orderId, payment)
-	// if err != nil {
-	// 	return
-	// }
-	resp.PaymentType = "bank_transfer"
-	resp.OrderId = "123123123213"
-	resp.Bank = "bni"
-	resp.VaNumber = "12321421214"
-	resp.GrossAmount = 100
+	response, err := p.repo.BankPermataCharge(orderId, payment)
+	if err != nil {
+		return
+	}
+	statusCode, _ := strconv.Atoi(response.StatusCode)
+	if !(statusCode >= 200 && statusCode < 300) {
+		fmt.Println("Error status code")
+		return errors.New(response.StatusMessage)
+	}
+
+	resp.PaymentType = response.PaymentType
+	resp.OrderId = response.OrderID
+	resp.Bank = "permata"
+	resp.VaNumber = response.PermataVaNumber
+	resp.GrossAmount = helper.RemovePriceDot(response.GrossAmount)
 
 	return
 }
 
 func (p *pgUsecase) BankCharge(orderId string, payment map[string]interface{}) (resp *domain.BankPaymentResponse, err error) {
-
 	resp = &domain.BankPaymentResponse{}
 
 	if payment["payment"] != nil {
