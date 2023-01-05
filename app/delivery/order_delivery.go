@@ -1,7 +1,7 @@
 package delivery
 
 import (
-	"fmt"
+	"errors"
 	"membership/domain"
 	"membership/helper"
 	"membership/pb"
@@ -39,10 +39,10 @@ func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, me
 // reqContext := ctx.Context()
 // }
 
-func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) {
+func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (err error) {
 	var payload interface{}
-	if err := ctx.BodyParser(&payload); err != nil {
-		fmt.Println(err)
+	if err = ctx.BodyParser(&payload); err != nil {
+		return
 	}
 
 	payloadMap := payload.(map[string]interface{})
@@ -57,11 +57,19 @@ func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) {
 
 		if bank == "permata" {
 
-			resp, _ := o.pgUsecase.BankCharge(bank.(string), "09234", payment)
+			resp, _ := o.pgUsecase.BankCharge(bank.(string), "092343", payment)
 			respCast := resp.(domain.PermataResponse)
-			fmt.Println("cast", respCast)
+			statusCode, _ := strconv.Atoi(respCast.StatusCode)
+			if !(statusCode < 200 || statusCode > 300 || statusCode == 300) {
+				return
+			} else {
+				err = errors.New(respCast.StatusMessage)
+				return
+			}
 		}
 	}
+
+	return nil
 }
 
 func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
@@ -70,7 +78,11 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		return o.handleResponse(ctx, err, 500, "", nil)
 	}
 	orderId := strconv.Itoa(int(time.Now().UTC().UnixNano()))
-	o.createBankPayment(ctx, orderId)
+
+	err := o.createBankPayment(ctx, orderId)
+	if err != nil {
+		return o.handleResponse(ctx, err, 500, "", nil)
+	}
 
 	reqContext := ctx.Context()
 
@@ -94,7 +106,7 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		},
 		Product: products,
 	}
-	_, err := o.usecase.Create(reqContext, values)
+	_, err = o.usecase.Create(reqContext, values)
 	return o.handleResponse(ctx, err, 200, "Create order", nil)
 }
 
