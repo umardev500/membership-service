@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 	"membership/domain"
 	"membership/helper"
 	"strconv"
@@ -28,12 +27,21 @@ func (p *pgUsecase) BankCharge(orderId string, payment map[string]interface{}) (
 		return nil, errors.New(response.StatusMessage)
 	}
 
-	fmt.Println(response)
+	var bank, vaNumber string
+	permataVaNumber := response.PermataVaNumber
+	if permataVaNumber != "" {
+		bank = "permata"
+		vaNumber = response.PermataVaNumber
+	}
+	if permataVaNumber == "" {
+		bank = response.VaNumbers[0].Bank
+		vaNumber = response.VaNumbers[0].VaNumber
+	}
 
 	resp.PaymentType = response.PaymentType
 	resp.OrderId = response.OrderID
-	resp.Bank = "permata"
-	resp.VaNumber = response.PermataVaNumber
+	resp.Bank = bank
+	resp.VaNumber = vaNumber
 	resp.GrossAmount = helper.RemovePriceDot(response.GrossAmount)
 
 	return
