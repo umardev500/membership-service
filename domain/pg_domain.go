@@ -11,10 +11,10 @@ type BankPaymentResponse struct {
 type BankTransfer struct {
 	Bank     string `json:"bank,omitempty"`
 	VaNumber string `json:"va_number,omitempty"`
-	Permata  struct {
+	Permata  *struct {
 		RecipientName string `json:"recipient_name,omitempty"`
 	} `json:"permata,omitempty"`
-	FreeText struct {
+	FreeText *struct {
 		Inquiry []struct {
 			ID string `json:"id,omitempty"`
 			EN string `json:"en,omitempty"`
@@ -24,7 +24,7 @@ type BankTransfer struct {
 			EN string `json:"en,omitempty"`
 		} `json:"payment,omitempty"`
 	} `json:"free_text,omitempty"`
-	Bca struct {
+	Bca *struct {
 		SubCompanyCode string `json:"sub_company_code,omitempty"`
 	} `json:"bca,omitempty"`
 }

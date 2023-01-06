@@ -3,7 +3,6 @@ package repository
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"membership/domain"
 	"net/http"
 )
@@ -39,9 +38,6 @@ func (p *PGRepository) BankCharge(orderId string, payment map[string]interface{}
 	if err != nil {
 		return
 	}
-
-	fmt.Println(string(jsonData))
-	return
 
 	postData := bytes.NewBuffer(jsonData)
 
