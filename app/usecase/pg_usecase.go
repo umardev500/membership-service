@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"membership/domain"
 	"membership/helper"
 	"strconv"
@@ -26,6 +27,8 @@ func (p *pgUsecase) BankCharge(orderId string, payment map[string]interface{}) (
 	if !(statusCode >= 200 && statusCode < 300) {
 		return nil, errors.New(response.StatusMessage)
 	}
+
+	fmt.Println(response)
 
 	resp.PaymentType = response.PaymentType
 	resp.OrderId = response.OrderID
