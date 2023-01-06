@@ -45,8 +45,7 @@ type BankTransferRequest struct {
 	PaymentType        string       `json:"payment_type"`
 	BankTransfer       BankTransfer `json:"bank_transfer"`
 	TransactionDetails struct {
-		OrderID     string `json:"order_id"`
-		GrossAmount int    `json:"gross_amount"`
+		GrossAmount int `json:"gross_amount"`
 	} `json:"transaction_details"`
 	CustomerDetails struct {
 		Email     string `json:"email"`
