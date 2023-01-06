@@ -76,6 +76,9 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 
 	return ctx.JSON(paymentResponse)
 
+	// Escape code below if u wanna test payment gateway
+	// beacause bellow code will not work if use proxy connection
+	// we can not connect to proxied connection to each gRPC server
 	reqContext := ctx.Context()
 
 	products := []*pb.OrderProduct{}
