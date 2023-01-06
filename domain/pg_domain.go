@@ -22,6 +22,46 @@ type PermataRequest struct {
 	} `json:"transaction_details"`
 }
 
+type BankTransfer struct {
+	Bank          string `json:"bank"`
+	VaNumber      string `json:"va_number"`
+	RecipientName string `json:"recipient_name"`
+	FreeText      struct {
+		Inquiry []struct {
+			ID string `json:"id"`
+			EN string `json:"en"`
+		} `json:"inquiry"`
+		Payment []struct {
+			ID string `json:"id"`
+			EN string `json:"en"`
+		} `json:"payment"`
+	} `json:"free_text"`
+	Bca struct {
+		SubCompanyCode string `json:"sub_company_code"`
+	} `json:"bca"`
+}
+
+type BankTransferRequest struct {
+	PaymentType        string       `json:"payment_type"`
+	BankTransfer       BankTransfer `json:"bank_transfer"`
+	TransactionDetails struct {
+		OrderID     string `json:"order_id"`
+		GrossAmount int    `json:"gross_amount"`
+	} `json:"transaction_details"`
+	CustomerDetails struct {
+		Email     string `json:"email"`
+		FirstName string `json:"first_name"`
+		LastName  string `json:"last_name"`
+		Phone     string `json:"phone"`
+	} `json:"customer_details"`
+	ItemDetails []struct {
+		ID       string `json:"id"`
+		Price    int    `json:"price"`
+		Quantity int    `json:"quantity"`
+		Name     string `json:"name"`
+	} `json:"item_details"`
+}
+
 type BankResponse struct {
 	StatusCode        string `json:"status_code"`
 	StatusMessage     string `json:"status_message"`
