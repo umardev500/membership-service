@@ -23,9 +23,9 @@ type PermataRequest struct {
 }
 
 type BankTransfer struct {
-	Bank     string `json:"bank"`
-	VaNumber string `json:"va_number"`
-	Permata  struct {
+	Bank string `json:"bank"`
+	// VaNumber string `json:"va_number"`
+	Permata struct {
 		RecipientName string `json:"recipient_name"`
 	} `json:"permata"`
 	FreeText struct {
@@ -47,7 +47,8 @@ type BankTransferRequest struct {
 	PaymentType        string       `json:"payment_type"`
 	BankTransfer       BankTransfer `json:"bank_transfer"`
 	TransactionDetails struct {
-		GrossAmount int `json:"gross_amount"`
+		OrderId     string `json:"order_id"`
+		GrossAmount int    `json:"gross_amount"`
 	} `json:"transaction_details"`
 	CustomerDetails struct {
 		Email     string `json:"email"`
