@@ -5,24 +5,24 @@ import (
 	"membership/pb"
 )
 
-type OrderRequest struct {
-	Buyer struct {
-		CustomerId string `json:"customer_id"`
-		Name       string `json:"name"`
-		User       string `json:"user"`
-	} `json:"buyer"`
-	Product []struct {
-		ProductId   string `json:"product_id"`
-		Name        string `json:"name"`
-		Price       int64  `json:"price"`
-		Duration    int64  `json:"duration"`
-		Description string `json:"description"`
-	} `json:"product"`
+type OrderBuyer struct {
+	CustomerId string `json:"customer_id"`
+	Name       string `json:"name"`
+	User       string `json:"user"`
 }
 
-type OrderBankPermataRequest struct {
-	OrderRequest
-	Payment PermataRequest `json:"payment"`
+type OrderProduct struct {
+	ProductId   string `json:"product_id"`
+	Name        string `json:"name"`
+	Price       int64  `json:"price"`
+	Duration    int64  `json:"duration"`
+	Description string `json:"description"`
+}
+
+type OrderRequest struct {
+	Buyer   OrderBuyer          `json:"buyer"`
+	Product []OrderProduct      `json:"product"`
+	Payment BankTransferRequest `json:"payment"`
 }
 
 type OrderUsecase interface {

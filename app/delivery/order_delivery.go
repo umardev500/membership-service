@@ -60,7 +60,7 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 	paymentType := ctx.Query("payment_type")
 	var paymentResponse *domain.BankPaymentResponse
 
-	var payload = new(domain.OrderBankPermataRequest)
+	var payload = new(domain.OrderRequest)
 	if err := ctx.BodyParser(&payload); err != nil {
 		return o.handleResponse(ctx, err, 500, "", nil)
 	}
