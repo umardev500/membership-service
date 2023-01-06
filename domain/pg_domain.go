@@ -8,20 +8,6 @@ type BankPaymentResponse struct {
 	GrossAmount int64
 }
 
-type PermataRequest struct {
-	PaymentType  string `json:"payment_type"`
-	BankTransfer struct {
-		Bank    string `json:"bank"`
-		Permata struct {
-			RecipientName string `json:"recipient_name"`
-		} `json:"permata"`
-	} `json:"bank_transfer"`
-	TransactionDetails struct {
-		OrderId     string `json:"order_id"`
-		GrossAmount int64  `json:"gross_amount"`
-	} `json:"transaction_details"`
-}
-
 type BankTransfer struct {
 	Bank     string `json:"bank,omitempty"`
 	VaNumber string `json:"va_number,omitempty"`
