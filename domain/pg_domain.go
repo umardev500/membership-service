@@ -23,10 +23,12 @@ type PermataRequest struct {
 }
 
 type BankTransfer struct {
-	Bank          string `json:"bank"`
-	VaNumber      string `json:"va_number"`
-	RecipientName string `json:"recipient_name"`
-	FreeText      struct {
+	Bank     string `json:"bank"`
+	VaNumber string `json:"va_number"`
+	Permata  struct {
+		RecipientName string `json:"recipient_name"`
+	} `json:"permata"`
+	FreeText struct {
 		Inquiry []struct {
 			ID string `json:"id"`
 			EN string `json:"en"`
