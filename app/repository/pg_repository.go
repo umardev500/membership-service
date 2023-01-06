@@ -3,7 +3,6 @@ package repository
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"membership/domain"
 	"net/http"
 )
@@ -21,35 +20,26 @@ func NewPGRepository(chargeURL, authString string) domain.PGRepository {
 }
 
 func (p *PGRepository) BankPermataCharge(orderId string, payment map[string]interface{}) (bankResponse domain.BankResponse, err error) {
-	var permataRequest domain.PermataRequest
+	var bankTfRequest *domain.BankTransferRequest
 
 	jsonStr, err := json.Marshal(payment)
 	if err != nil {
 		return
 	}
-	if err = json.Unmarshal(jsonStr, &permataRequest); err != nil {
+	if err = json.Unmarshal(jsonStr, &bankTfRequest); err != nil {
 		return
 	}
 
-	transactionDetails := permataRequest.TransactionDetails
-	bankTf := permataRequest.BankTransfer
+	transactionDetails := bankTfRequest.TransactionDetails
+	transactionDetails.OrderId = orderId                  // overide order id
+	bankTfRequest.TransactionDetails = transactionDetails // overide transaction details
 
-	jsonData := fmt.Sprintf(`{
-		"payment_type": "bank_transfer",
-		"bank_transfer": {
-		  "bank": "permata",
-		  "permata": {
-			"recipient_name": "%s"
-		  }
-		},
-		"transaction_details": {
-		  "order_id": "%s",
-		  "gross_amount": %d
-		}
-	}`, bankTf.Permata.RecipientName, orderId, transactionDetails.GrossAmount)
+	jsonData, err := json.Marshal(&bankTfRequest)
+	if err != nil {
+		return
+	}
 
-	jsonDataByte := []byte(jsonData)
-	postData := bytes.NewBuffer(jsonDataByte)
+	postData := bytes.NewBuffer(jsonData)
 
 	client := &http.Client{}
 	request, err := http.NewRequest("POST", p.chargeUrl, postData)
