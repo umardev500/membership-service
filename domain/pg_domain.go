@@ -65,22 +65,22 @@ type BankTransferRequest struct {
 }
 
 type BankResponse struct {
-	StatusCode        string `json:"status_code"`
-	StatusMessage     string `json:"status_message"`
-	TransactionID     string `json:"transaction_id"`
-	OrderID           string `json:"order_id"`
-	GrossAmount       string `json:"gross_amount"`
-	PaymentType       string `json:"payment_type"`
-	TransactionTime   string `json:"transaction_time"`
-	TransactionStatus string `json:"transaction_status"`
-	FraudStatus       string `json:"fraud_status"`
-	Currency          string `json:"currency"`
+	StatusCode        string `json:"status_code,omitempty"`
+	StatusMessage     string `json:"status_message,omitempty"`
+	TransactionID     string `json:"transaction_id,omitempty"`
+	OrderID           string `json:"order_id,omitempty"`
+	GrossAmount       string `json:"gross_amount,omitempty"`
+	PaymentType       string `json:"payment_type,omitempty"`
+	TransactionTime   string `json:"transaction_time,omitempty"`
+	TransactionStatus string `json:"transaction_status,omitempty"`
+	FraudStatus       string `json:"fraud_status,omitempty"`
+	Currency          string `json:"currency,omitempty"`
 	VaNumbers         []struct {
-		Bank     string `json:"bank"`
-		VaNumber string `json:"va_number"`
-	} `json:"va_numbers"`
-	PermataVaNumber string `json:"permata_va_number"`
-	MerchantID      string `json:"merchant_id"`
+		Bank     string `json:"bank,omitempty"`
+		VaNumber string `json:"va_number,omitempty"`
+	} `json:"va_numbers,omitempty"`
+	PermataVaNumber string `json:"permata_va_number,omitempty"`
+	MerchantID      string `json:"merchant_id,omitempty"`
 }
 
 type PGUsecase interface {
