@@ -74,5 +74,5 @@ type PGUsecase interface {
 }
 
 type PGRepository interface {
-	BankPermataCharge(orderId string, payment map[string]interface{}) (BankResponse, error)
+	BankCharge(orderId string, payment map[string]interface{}) (BankResponse, error)
 }

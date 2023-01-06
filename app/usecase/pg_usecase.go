@@ -15,14 +15,16 @@ func NewPGUsecase(repo domain.PGRepository) domain.PGUsecase {
 	return &pgUsecase{repo: repo}
 }
 
-func (p *pgUsecase) chargePermata(orderId string, payment map[string]interface{}, resp *domain.BankPaymentResponse) (err error) {
-	response, err := p.repo.BankPermataCharge(orderId, payment)
+func (p *pgUsecase) BankCharge(orderId string, payment map[string]interface{}) (resp *domain.BankPaymentResponse, err error) {
+	resp = &domain.BankPaymentResponse{}
+
+	response, err := p.repo.BankCharge(orderId, payment)
 	if err != nil {
 		return
 	}
 	statusCode, _ := strconv.Atoi(response.StatusCode)
 	if !(statusCode >= 200 && statusCode < 300) {
-		return errors.New(response.StatusMessage)
+		return nil, errors.New(response.StatusMessage)
 	}
 
 	resp.PaymentType = response.PaymentType
@@ -30,25 +32,6 @@ func (p *pgUsecase) chargePermata(orderId string, payment map[string]interface{}
 	resp.Bank = "permata"
 	resp.VaNumber = response.PermataVaNumber
 	resp.GrossAmount = helper.RemovePriceDot(response.GrossAmount)
-
-	return
-}
-
-func (p *pgUsecase) BankCharge(orderId string, payment map[string]interface{}) (resp *domain.BankPaymentResponse, err error) {
-	resp = &domain.BankPaymentResponse{}
-
-	if payment["payment"] != nil {
-		payment = payment["payment"].(map[string]interface{})
-	}
-
-	if payment != nil {
-		bankTransfer := payment["bank_transfer"].(map[string]interface{})
-		bank := bankTransfer["bank"]
-
-		if bank == "permata" {
-			err = p.chargePermata(orderId, payment, resp)
-		}
-	}
 
 	return
 }

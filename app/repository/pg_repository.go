@@ -19,7 +19,7 @@ func NewPGRepository(chargeURL, authString string) domain.PGRepository {
 	}
 }
 
-func (p *PGRepository) BankPermataCharge(orderId string, payment map[string]interface{}) (bankResponse domain.BankResponse, err error) {
+func (p *PGRepository) BankCharge(orderId string, payment map[string]interface{}) (bankResponse domain.BankResponse, err error) {
 	var bankTfRequest *domain.BankTransferRequest
 
 	jsonStr, err := json.Marshal(payment)
