@@ -1,5 +1,14 @@
 package domain
 
-type CustomerUsecase interface{}
+import (
+	"context"
+	"membership/pb"
+)
 
-type CustomerRepository interface{}
+type CustomerUsecase interface {
+	FindAll(ctx context.Context, req *pb.CustomerFindAllRequest) (*pb.CustomerFindAllResponse, error)
+}
+
+type CustomerRepository interface {
+	FindAll(ctx context.Context, req *pb.CustomerFindAllRequest) (*pb.CustomerFindAllResponse, error)
+}
