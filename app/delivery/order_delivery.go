@@ -4,6 +4,7 @@ import (
 	"membership/domain"
 	"membership/helper"
 	"membership/pb"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -98,14 +99,16 @@ func (o *OrderDelivery) FindAll(ctx *fiber.Ctx) error {
 	perPage := helper.ToInt(ctx.Query("per_page"))
 	search := ctx.Query("search")
 	status := ctx.Query("status")
+	countOnly, _ := strconv.ParseBool(ctx.Query("count_only"))
 
 	reqContext := ctx.Context()
 	filter := &pb.OrderFindAllRequest{
-		Sort:    sort,
-		Page:    page,
-		PerPage: perPage,
-		Search:  search,
-		Status:  status,
+		Sort:      sort,
+		Page:      page,
+		PerPage:   perPage,
+		Search:    search,
+		Status:    status,
+		CountOnly: countOnly,
 	}
 	res, err := o.usecase.FindAll(reqContext, filter)
 
