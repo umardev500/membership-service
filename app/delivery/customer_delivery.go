@@ -25,8 +25,20 @@ func (c *CustomerDelivery) handleResponse(ctx *fiber.Ctx, err error, status int,
 }
 
 func (c *CustomerDelivery) FindAll(ctx *fiber.Ctx) error {
+	sort := ctx.Query("sort", "asc")
+	page := helper.ToInt(ctx.Query("page", "0"))
+	perPage := helper.ToInt(ctx.Query("per_page"))
+	search := ctx.Query("search")
+	status := ctx.Query("status")
+
 	reqCtx := ctx.Context()
-	filter := &pb.CustomerFindAllRequest{}
+	filter := &pb.CustomerFindAllRequest{
+		Sort:    sort,
+		Page:    page,
+		PerPage: perPage,
+		Search:  search,
+		Status:  status,
+	}
 	res, err := c.usecase.FindAll(reqCtx, filter)
 
 	return c.handleResponse(ctx, err, 200, "Find all customers", res)
