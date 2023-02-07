@@ -1,4 +1,4 @@
-FROM go-image:latest as dev
+FROM golang as dev
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ CMD air
 
 # Production for
 
-FROM go-image:latest as prod
+FROM golang as prod
 
 WORKDIR /app
 
