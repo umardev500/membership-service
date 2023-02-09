@@ -16,6 +16,7 @@ type CustomerDelivery struct {
 func NewCustomerDelivery(usecase domain.CustomerUsecase, router fiber.Router) {
 	handler := &CustomerDelivery{usecase: usecase}
 	router.Get("/customers", handler.FindAll)
+	router.Delete("/customers/:id", handler.Delete)
 }
 
 func (c *CustomerDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, message string, data interface{}) error {
@@ -23,6 +24,16 @@ func (c *CustomerDelivery) handleResponse(ctx *fiber.Ctx, err error, status int,
 		return helper.ApiResponse(ctx, 500, err.Error(), nil)
 	}
 	return helper.ApiResponse(ctx, status, message, data)
+}
+
+func (c *CustomerDelivery) Delete(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	hard, _ := strconv.ParseBool(ctx.Query("hard", "false"))
+
+	reqCtx := ctx.Context()
+	res, err := c.usecase.Delete(reqCtx, &pb.CustomerDeleteRequest{CustomerId: id, Hard: hard})
+
+	return c.handleResponse(ctx, err, 200, "Delete customer", res)
 }
 
 func (c *CustomerDelivery) FindAll(ctx *fiber.Ctx) error {

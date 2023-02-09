@@ -26,6 +26,14 @@ func (c *CustomerUsecase) withTimeout(dur int64, ctx context.Context, f func(con
 	f(ctx)
 }
 
+func (c *CustomerUsecase) Delete(ctx context.Context, req *pb.CustomerDeleteRequest) (res *pb.OperationResponse, err error) {
+	c.withTimeout(0, ctx, func(ctx context.Context) {
+		res, err = c.repository.Delete(ctx, req)
+	})
+
+	return
+}
+
 func (c *CustomerUsecase) FindAll(ctx context.Context, req *pb.CustomerFindAllRequest) (res *pb.CustomerFindAllResponse, err error) {
 	c.withTimeout(0, ctx, func(ctx context.Context) {
 		res, err = c.repository.FindAll(ctx, req)
