@@ -74,7 +74,7 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		}
 	}
 
-	return ctx.JSON(paymentResponse)
+	// return ctx.JSON(paymentResponse)
 
 	// Escape code below if u wanna test payment gateway
 	// beacause bellow code will not work if use proxy connection
@@ -116,7 +116,7 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 		Payment: payment,
 	}
 	_, err := o.usecase.Create(reqContext, values)
-	return o.handleResponse(ctx, err, 200, "Create order", nil)
+	return o.handleResponse(ctx, err, 200, "Create order", paymentResponse)
 }
 
 func (o *OrderDelivery) ChangeStatus(ctx *fiber.Ctx) error {
