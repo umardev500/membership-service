@@ -47,3 +47,11 @@ func (c *Connection) CustomerConn() (client pb.CustomerServiceClient) {
 
 	return
 }
+
+func (c *Connection) UserConn() (client pb.UserServiceClient) {
+	port := os.Getenv("USER_RPC_PORT")
+	conn := c.getConn(port)
+	client = pb.NewUserServiceClient(conn)
+
+	return
+}

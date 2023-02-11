@@ -21,6 +21,7 @@ func main() {
 	product := conns.ProductConn()
 	order := conns.OrderConn()
 	customer := conns.CustomerConn()
+	user := conns.UserConn()
 
 	port := os.Getenv("PORT")
 
@@ -32,6 +33,7 @@ func main() {
 	injector.NewProductInjector(product, api)
 	injector.NewOrderInjector(order, api)
 	injector.NewCustomerInjector(customer, api)
+	injector.NewUserInjector(user, api)
 
 	fmt.Printf("⚡️[server]: Server is running on porting %s\n", port)
 
