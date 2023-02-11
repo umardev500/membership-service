@@ -6,9 +6,9 @@ import (
 )
 
 type UserUsecase interface {
-	Find(ctx context.Context, userId string) (res *pb.User, err error)
+	Find(ctx context.Context, userId string) (res *pb.UserFindResponse, err error)
 }
 
 type UserRepository interface {
-	Find(ctx context.Context, userId string) (res *pb.User, err error)
+	Find(ctx context.Context, userId string) (res *pb.UserFindResponse, err error)
 }

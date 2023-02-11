@@ -16,7 +16,7 @@ func NewUserUsecase(repository domain.UserRepository) domain.UserUsecase {
 	}
 }
 
-func (u *userUsecase) Find(ctx context.Context, userId string) (res *pb.User, err error) {
+func (u *userUsecase) Find(ctx context.Context, userId string) (res *pb.UserFindResponse, err error) {
 	res, err = u.repository.Find(ctx, userId)
 	return
 }

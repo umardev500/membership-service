@@ -16,7 +16,7 @@ func NewUserRepository(user pb.UserServiceClient) domain.UserRepository {
 	}
 }
 
-func (u *userRepository) Find(ctx context.Context, userId string) (res *pb.User, err error) {
+func (u *userRepository) Find(ctx context.Context, userId string) (res *pb.UserFindResponse, err error) {
 	res, err = u.user.Find(ctx, &pb.UserFindRequest{UserId: userId})
 	return
 }
