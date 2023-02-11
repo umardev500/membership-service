@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"membership/domain"
 	"membership/pb"
 )
@@ -13,4 +14,9 @@ func NewUserRepository(user pb.UserServiceClient) domain.UserRepository {
 	return &userRepository{
 		user: user,
 	}
+}
+
+func (u *userRepository) Find(ctx context.Context, userId string) (res *pb.User, err error) {
+	res, err = u.user.Find(ctx, &pb.UserFindRequest{UserId: userId})
+	return
 }
