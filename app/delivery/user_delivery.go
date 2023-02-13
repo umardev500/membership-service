@@ -1,7 +1,6 @@
 package delivery
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"membership/domain"
@@ -21,7 +20,7 @@ func NewUserDelivery(usecase domain.UserUsecase, router fiber.Router) {
 	}
 
 	router.Get("/users/:id", handler.Find)
-	router.Put("/users/:id", handler.UpdateDetail)
+	router.Put("/users/:id", handler.UpdateAvatar)
 }
 
 func (u *userDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, message string, data interface{}) error {
@@ -31,14 +30,7 @@ func (u *userDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, mes
 	return helper.ApiResponse(ctx, status, message, data)
 }
 
-func (u *userDelivery) UpdateDetail(ctx *fiber.Ctx) error {
-	// Read payload
-	var userDetail domain.UserDetail
-
-	req, _ := ctx.MultipartForm()
-	payload := req.Value["payload"][0]
-	json.Unmarshal([]byte(payload), &userDetail)
-
+func (u *userDelivery) UpdateAvatar(ctx *fiber.Ctx) error {
 	// Upload file
 	file, err := ctx.FormFile("file")
 	if err != nil {
