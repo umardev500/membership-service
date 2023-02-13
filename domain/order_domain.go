@@ -30,6 +30,7 @@ type OrderUsecase interface {
 	FindOne(context.Context, *pb.OrderFindOneRequest) (*pb.Order, error)
 	ChangeStatus(context.Context, *pb.OrderChangeStatus) (*pb.OperationResponse, error)
 	Create(ctx context.Context, req *pb.OrderCreateRequest) (*pb.Empty, error)
+	SumIncome(ctx context.Context, req *pb.OrderSumIncomeRequest) (res *pb.OrderSumResponse, err error)
 }
 
 type OrderRepository interface {
@@ -37,4 +38,5 @@ type OrderRepository interface {
 	FindAll(context.Context, *pb.OrderFindAllRequest) (*pb.OrderFindAllResponse, error)
 	FindOne(context.Context, *pb.OrderFindOneRequest) (*pb.Order, error)
 	ChangeStatus(context.Context, *pb.OrderChangeStatus) (*pb.OperationResponse, error)
+	SumIncome(ctx context.Context, req *pb.OrderSumIncomeRequest) (res *pb.OrderSumResponse, err error)
 }

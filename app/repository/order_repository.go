@@ -18,6 +18,10 @@ func NewOrderRepository(order pb.OrderServiceClient) domain.OrderRepository {
 
 // func (o *OrderRepository) {}
 
+func (o *OrderRepository) SumIncome(ctx context.Context, req *pb.OrderSumIncomeRequest) (res *pb.OrderSumResponse, err error) {
+	return o.order.SumIncome(ctx, req)
+}
+
 func (o *OrderRepository) Create(ctx context.Context, req *pb.OrderCreateRequest) (*pb.Empty, error) {
 	return o.order.Create(ctx, req)
 }

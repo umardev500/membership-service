@@ -25,6 +25,8 @@ func NewOrderDelivery(usecase domain.OrderUsecase, pgUsecase domain.PGUsecase, r
 	router.Get("/orders", handler.FindAll)
 	router.Get("/orders/:id", handler.FindOne)
 	router.Put("/orders/:id", handler.ChangeStatus)
+	// Get total of income
+	router.Get("/orders/income/sum", handler.SumIncome)
 }
 
 func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, message string, data interface{}) error {
@@ -37,6 +39,14 @@ func (o *OrderDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, me
 // func (o *OrderDelivery) FindAll(ctx *fiber.Ctx) error {
 // reqContext := ctx.Context()
 // }
+
+func (o *OrderDelivery) SumIncome(ctx *fiber.Ctx) error {
+	status := ctx.Query("status", "settlement")
+	reqContext := ctx.Context()
+	res, err := o.usecase.SumIncome(reqContext, &pb.OrderSumIncomeRequest{Status: status})
+
+	return o.handleResponse(ctx, err, 200, "Sum income", res)
+}
 
 func (o *OrderDelivery) createBankPayment(ctx *fiber.Ctx, orderId string) (response *domain.BankPaymentResponse, err error) {
 	var payload interface{}

@@ -30,6 +30,14 @@ func (o *OrderUsecase) withTimeout(dur int, ctx context.Context, f func(context.
 
 // func (o *OrderUsecase) {}
 
+func (o *OrderUsecase) SumIncome(ctx context.Context, req *pb.OrderSumIncomeRequest) (res *pb.OrderSumResponse, err error) {
+	o.withTimeout(0, ctx, func(ctx context.Context) {
+		res, err = o.repository.SumIncome(ctx, req)
+	})
+
+	return
+}
+
 func (o *OrderUsecase) Create(ctx context.Context, req *pb.OrderCreateRequest) (res *pb.Empty, err error) {
 	o.withTimeout(0, ctx, func(ctx context.Context) {
 		res, err = o.repository.Create(ctx, req)
