@@ -44,8 +44,10 @@ func (u *userDelivery) UpdateAvatar(ctx *fiber.Ctx) error {
 		return u.handleResponse(ctx, err, 200, "Upload file", nil)
 	}
 
-	fileName := fmt.Sprintf("./public/uploads/images/avatars/%s", file.Filename)
-	out, err := os.Create(fileName)
+	rootPath := "./public"
+	fileLocation := fmt.Sprintf("/uploads/images/avatars/%s", file.Filename)
+	filePath := fmt.Sprintf("%s%s", rootPath, fileLocation)
+	out, err := os.Create(filePath)
 	if err != nil {
 		return u.handleResponse(ctx, err, 200, "Upload file", nil)
 	}
@@ -79,7 +81,7 @@ func (u *userDelivery) UpdateAvatar(ctx *fiber.Ctx) error {
 		return u.handleResponse(ctx, err, 200, "Upload file", nil)
 	}
 
-	detail := &pb.UserDetail{Avatar: fileName}
+	detail := &pb.UserDetail{Avatar: fileLocation}
 	resp, err := u.usecase.UpdateDetail(reqCtx, userId, detail)
 	if err != nil {
 		return u.handleResponse(ctx, err, 200, "Upload file", nil)
