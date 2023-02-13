@@ -37,10 +37,15 @@ message UserLoginRequest {
     string pass = 2;
 }
 
-message UserLoginResponse {
+message UserLoginResponsePayload {
     string user_id = 1;
     string user = 2;
     string level = 3;
+}
+
+message UserLoginResponse {
+    bool is_empty = 1;
+    UserLoginResponsePayload payload = 2;
 }
 
 message UserFindRequest {
@@ -58,8 +63,14 @@ message UserUpdateCredsRequest {
     string pass = 3;
 }
 
+message UserUpdateDetailRequest {
+    UserDetail detail = 1;
+    string user_id = 2;
+}
+
 service UserService {
     rpc Login(UserLoginRequest) returns (UserLoginResponse) {}
     rpc Find(UserFindRequest) returns (UserFindResponse) {}
     rpc UpdateCreds(UserUpdateCredsRequest) returns (OperationResponse) {}
+    rpc UpdateDetail(UserUpdateDetailRequest) returns (OperationResponse) {}
 }
