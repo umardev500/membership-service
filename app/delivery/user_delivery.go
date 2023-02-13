@@ -5,6 +5,9 @@ import (
 	"io"
 	"membership/domain"
 	"membership/helper"
+	"membership/pb"
+	"membership/variable"
+	"net/http"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -31,14 +34,18 @@ func (u *userDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, mes
 }
 
 func (u *userDelivery) UpdateAvatar(ctx *fiber.Ctx) error {
+	var responses variable.OpertionResponse = variable.OpertionResponse{IsAffected: true}
+	userId := ctx.Params("id")
+	reqCtx := ctx.Context()
+
 	// Upload file
 	file, err := ctx.FormFile("file")
 	if err != nil {
 		return u.handleResponse(ctx, err, 200, "Upload file", nil)
 	}
 
-	filePath := fmt.Sprintf("./public/uploads/images/avatars/%s", file.Filename)
-	out, err := os.Create(filePath)
+	fileName := fmt.Sprintf("./public/uploads/images/avatars/%s", file.Filename)
+	out, err := os.Create(fileName)
 	if err != nil {
 		return u.handleResponse(ctx, err, 200, "Upload file", nil)
 	}
@@ -72,7 +79,18 @@ func (u *userDelivery) UpdateAvatar(ctx *fiber.Ctx) error {
 		return u.handleResponse(ctx, err, 200, "Upload file", nil)
 	}
 
-	return ctx.JSON("OK")
+	detail := &pb.UserDetail{Avatar: fileName}
+	resp, err := u.usecase.UpdateDetail(reqCtx, userId, detail)
+	if err != nil {
+		return u.handleResponse(ctx, err, 200, "Upload file", nil)
+	}
+
+	if !resp.IsAffected {
+		responses = variable.OpertionResponse{IsAffected: false}
+		return u.handleResponse(ctx, err, http.StatusNotModified, "Update avatar", responses)
+	}
+
+	return u.handleResponse(ctx, err, 200, "Update avatar", responses)
 }
 
 func (u *userDelivery) Find(ctx *fiber.Ctx) error {

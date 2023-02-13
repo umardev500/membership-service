@@ -23,8 +23,10 @@ type UserDetail struct {
 
 type UserUsecase interface {
 	Find(ctx context.Context, userId string) (res *pb.UserFindResponse, err error)
+	UpdateDetail(ctx context.Context, userId string, detail *pb.UserDetail) (res *pb.OperationResponse, err error)
 }
 
 type UserRepository interface {
 	Find(ctx context.Context, userId string) (res *pb.UserFindResponse, err error)
+	UpdateDetail(ctx context.Context, req *pb.UserUpdateDetailRequest) (res *pb.OperationResponse, err error)
 }
