@@ -6,21 +6,21 @@ import (
 )
 
 type UserLocation struct {
-	Address    string `bson:"address,omitempty"`
-	Village    string `bson:"village,omitempty"`
-	District   string `bon:"district,omitempty"`
-	City       string `bson:"city,omitempty"`
-	Province   string `bson:"province,omitempty"`
-	PostalCode string `bson:"postal_code,omitempty"`
+	Address    string `bson:"address" json:"address,omitempty"`
+	Village    string `bson:"village" json:"village,omitempty"`
+	District   string `bon:"district" json:"district,omitempty"`
+	City       string `bson:"city" json:"city,omitempty"`
+	Province   string `bson:"province" json:"province,omitempty"`
+	PostalCode string `bson:"postal_code" json:"postal_code,omitempty"`
 }
 
 type UserDetail struct {
-	Name     string        `bson:"name,omitempty"`
-	Email    string        `bson:"email,omitempty"`
-	Phone    string        `bson:"phone,omitempty"`
-	Avatar   string        `bson:"avatar,omitempty"`
-	Gender   string        `bson:"gender,omitempty"`
-	Location *UserLocation `bson:"location,omitempty"`
+	Name     string        `bson:"name" json:"name,omitempty"`
+	Email    string        `bson:"email" json:"email,omitempty"`
+	Phone    string        `bson:"phone" json:"phone,omitempty"`
+	Avatar   string        `bson:"avatar" json:"avatar,omitempty"`
+	Gender   string        `bson:"gender" json:"gender,omitempty"`
+	Location *UserLocation `bson:"location" json:"location,omitempty"`
 }
 
 type UserUsecase interface {

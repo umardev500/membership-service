@@ -23,7 +23,8 @@ func NewUserDelivery(usecase domain.UserUsecase, router fiber.Router) {
 	}
 
 	router.Get("/users/:id", handler.Find)
-	router.Put("/users/:id", handler.UpdateAvatar)
+	router.Put("/users/:id/detail", handler.UpdateDetail)
+	router.Put("/users/:id/avatar", handler.UpdateAvatar)
 }
 
 func (u *userDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, message string, data interface{}) error {
@@ -31,6 +32,16 @@ func (u *userDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, mes
 		return helper.ApiResponse(ctx, 500, err.Error(), nil)
 	}
 	return helper.ApiResponse(ctx, status, message, data)
+}
+
+func (u *userDelivery) UpdateDetail(ctx *fiber.Ctx) error {
+	// detail := &pb.UserUpdateDetailRequest{}
+	var userDetail domain.UserDetail
+	if err := ctx.BodyParser(&userDetail); err != nil {
+		return u.handleResponse(ctx, err, 200, "Update detail", nil)
+	}
+
+	return ctx.JSON(userDetail)
 }
 
 func (u *userDelivery) UpdateAvatar(ctx *fiber.Ctx) error {
