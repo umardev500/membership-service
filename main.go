@@ -27,7 +27,7 @@ func main() {
 
 	app := fiber.New()
 	app.Use(cors.New())
-	app.Static("/", "./public", fiber.Static{Compress: true, Browse: true})
+	app.Static("/static", "./public", fiber.Static{Compress: true, Browse: true})
 
 	api := app.Group("api")
 
