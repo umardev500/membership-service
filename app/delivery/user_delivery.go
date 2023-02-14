@@ -35,13 +35,27 @@ func (u *userDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, mes
 }
 
 func (u *userDelivery) UpdateDetail(ctx *fiber.Ctx) error {
-	// detail := &pb.UserUpdateDetailRequest{}
 	var userDetail domain.UserDetail
 	if err := ctx.BodyParser(&userDetail); err != nil {
 		return u.handleResponse(ctx, err, 200, "Update detail", nil)
 	}
+	detail := &pb.UserDetail{
+		Name:   userDetail.Name,
+		Email:  userDetail.Email,
+		Phone:  userDetail.Phone,
+		Avatar: userDetail.Avatar,
+		Gender: userDetail.Gender,
+	}
 
-	return ctx.JSON(userDetail)
+	reqCtx := ctx.Context()
+	userId := ctx.Params("id")
+
+	resp, err := u.usecase.UpdateDetail(reqCtx, userId, detail)
+	if err != nil {
+		return u.handleResponse(ctx, err, 200, "Update detail", nil)
+	}
+
+	return u.handleResponse(ctx, err, 200, "Update detail", resp)
 }
 
 func (u *userDelivery) UpdateAvatar(ctx *fiber.Ctx) error {
