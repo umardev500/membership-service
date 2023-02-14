@@ -18,7 +18,8 @@ message UserDetail {
     string email = 2;
     string phone = 3;
     string avatar = 4;
-    UserLocation location = 5;
+    string gender = 5;
+    UserLocation location = 6;
 }
 
 message User {

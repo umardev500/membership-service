@@ -18,6 +18,8 @@ type UserDetail struct {
 	Name     string        `bson:"name,omitempty"`
 	Email    string        `bson:"email,omitempty"`
 	Phone    string        `bson:"phone,omitempty"`
+	Avatar   string        `bson:"avatar,omitempty"`
+	Gender   string        `bson:"gender,omitempty"`
 	Location *UserLocation `bson:"location,omitempty"`
 }
 
