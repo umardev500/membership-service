@@ -16,6 +16,10 @@ func NewUserRepository(user pb.UserServiceClient) domain.UserRepository {
 	}
 }
 
+func (u *userRepository) UpdateCreds(ctx context.Context, req *pb.UserUpdateCredsRequest) (res *pb.OperationResponse, err error) {
+	return u.user.UpdateCreds(ctx, req)
+}
+
 func (u *userRepository) UpdateDetail(ctx context.Context, req *pb.UserUpdateDetailRequest) (res *pb.OperationResponse, err error) {
 	return u.user.UpdateDetail(ctx, req)
 }

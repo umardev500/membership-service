@@ -26,6 +26,7 @@ func NewUserDelivery(usecase domain.UserUsecase, router fiber.Router) {
 	router.Put("/users/:id/avatar", handler.UpdateAvatar)
 	router.Put("/users/:id/detail", handler.UpdateDetail)
 	router.Put("/users/:id/location", handler.UpdateLocation)
+	router.Put("/users/:id/creds", handler.UpdateCreds)
 }
 
 func (u *userDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, message string, data interface{}) error {
@@ -33,6 +34,29 @@ func (u *userDelivery) handleResponse(ctx *fiber.Ctx, err error, status int, mes
 		return helper.ApiResponse(ctx, 500, err.Error(), nil)
 	}
 	return helper.ApiResponse(ctx, status, message, data)
+}
+
+func (u *userDelivery) UpdateCreds(ctx *fiber.Ctx) error {
+	var userData domain.UserCreds
+	if err := ctx.BodyParser(&userData); err != nil {
+		return u.handleResponse(ctx, err, 200, "Update detail", nil)
+	}
+
+	reqCtx := ctx.Context()
+	userId := ctx.Params("id")
+	payload := &pb.UserUpdateCredsRequest{
+		UserId:  userId,
+		User:    userData.User,
+		Pass:    userData.Pass,
+		NewPass: userData.NewPass,
+	}
+
+	resp, err := u.usecase.UpdateCreds(reqCtx, payload)
+	if err != nil {
+		return u.handleResponse(ctx, err, 200, "Update creds", nil)
+	}
+
+	return u.handleResponse(ctx, err, 200, "Update creds", resp)
 }
 
 func (u *userDelivery) UpdateLocation(ctx *fiber.Ctx) error {
