@@ -23,11 +23,13 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CustomerServiceClient interface {
 	Create(ctx context.Context, in *CustomerCreateRequest, opts ...grpc.CallOption) (*Empty, error)
-	FindOne(ctx context.Context, in *CustomerFindOneRequest, opts ...grpc.CallOption) (*Customer, error)
+	Find(ctx context.Context, in *CustomerFindRequest, opts ...grpc.CallOption) (*CustomerFindResponse, error)
 	FindAll(ctx context.Context, in *CustomerFindAllRequest, opts ...grpc.CallOption) (*CustomerFindAllResponse, error)
 	ChangeStatus(ctx context.Context, in *CustomerChangeStatusRequest, opts ...grpc.CallOption) (*OperationResponse, error)
 	UpdateDetail(ctx context.Context, in *CustomerUpdateDetailRequest, opts ...grpc.CallOption) (*OperationResponse, error)
 	Delete(ctx context.Context, in *CustomerDeleteRequest, opts ...grpc.CallOption) (*OperationResponse, error)
+	SetExp(ctx context.Context, in *CustomerSetExpRequest, opts ...grpc.CallOption) (*OperationResponse, error)
+	Login(ctx context.Context, in *CustomerLoginRequest, opts ...grpc.CallOption) (*CustomerLoginResponse, error)
 }
 
 type customerServiceClient struct {
@@ -47,9 +49,9 @@ func (c *customerServiceClient) Create(ctx context.Context, in *CustomerCreateRe
 	return out, nil
 }
 
-func (c *customerServiceClient) FindOne(ctx context.Context, in *CustomerFindOneRequest, opts ...grpc.CallOption) (*Customer, error) {
-	out := new(Customer)
-	err := c.cc.Invoke(ctx, "/CustomerService/FindOne", in, out, opts...)
+func (c *customerServiceClient) Find(ctx context.Context, in *CustomerFindRequest, opts ...grpc.CallOption) (*CustomerFindResponse, error) {
+	out := new(CustomerFindResponse)
+	err := c.cc.Invoke(ctx, "/CustomerService/Find", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -92,16 +94,36 @@ func (c *customerServiceClient) Delete(ctx context.Context, in *CustomerDeleteRe
 	return out, nil
 }
 
+func (c *customerServiceClient) SetExp(ctx context.Context, in *CustomerSetExpRequest, opts ...grpc.CallOption) (*OperationResponse, error) {
+	out := new(OperationResponse)
+	err := c.cc.Invoke(ctx, "/CustomerService/SetExp", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *customerServiceClient) Login(ctx context.Context, in *CustomerLoginRequest, opts ...grpc.CallOption) (*CustomerLoginResponse, error) {
+	out := new(CustomerLoginResponse)
+	err := c.cc.Invoke(ctx, "/CustomerService/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CustomerServiceServer is the server API for CustomerService service.
 // All implementations must embed UnimplementedCustomerServiceServer
 // for forward compatibility
 type CustomerServiceServer interface {
 	Create(context.Context, *CustomerCreateRequest) (*Empty, error)
-	FindOne(context.Context, *CustomerFindOneRequest) (*Customer, error)
+	Find(context.Context, *CustomerFindRequest) (*CustomerFindResponse, error)
 	FindAll(context.Context, *CustomerFindAllRequest) (*CustomerFindAllResponse, error)
 	ChangeStatus(context.Context, *CustomerChangeStatusRequest) (*OperationResponse, error)
 	UpdateDetail(context.Context, *CustomerUpdateDetailRequest) (*OperationResponse, error)
 	Delete(context.Context, *CustomerDeleteRequest) (*OperationResponse, error)
+	SetExp(context.Context, *CustomerSetExpRequest) (*OperationResponse, error)
+	Login(context.Context, *CustomerLoginRequest) (*CustomerLoginResponse, error)
 	mustEmbedUnimplementedCustomerServiceServer()
 }
 
@@ -112,8 +134,8 @@ type UnimplementedCustomerServiceServer struct {
 func (UnimplementedCustomerServiceServer) Create(context.Context, *CustomerCreateRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedCustomerServiceServer) FindOne(context.Context, *CustomerFindOneRequest) (*Customer, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FindOne not implemented")
+func (UnimplementedCustomerServiceServer) Find(context.Context, *CustomerFindRequest) (*CustomerFindResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Find not implemented")
 }
 func (UnimplementedCustomerServiceServer) FindAll(context.Context, *CustomerFindAllRequest) (*CustomerFindAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindAll not implemented")
@@ -126,6 +148,12 @@ func (UnimplementedCustomerServiceServer) UpdateDetail(context.Context, *Custome
 }
 func (UnimplementedCustomerServiceServer) Delete(context.Context, *CustomerDeleteRequest) (*OperationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedCustomerServiceServer) SetExp(context.Context, *CustomerSetExpRequest) (*OperationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetExp not implemented")
+}
+func (UnimplementedCustomerServiceServer) Login(context.Context, *CustomerLoginRequest) (*CustomerLoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedCustomerServiceServer) mustEmbedUnimplementedCustomerServiceServer() {}
 
@@ -158,20 +186,20 @@ func _CustomerService_Create_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CustomerService_FindOne_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CustomerFindOneRequest)
+func _CustomerService_Find_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CustomerFindRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CustomerServiceServer).FindOne(ctx, in)
+		return srv.(CustomerServiceServer).Find(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/CustomerService/FindOne",
+		FullMethod: "/CustomerService/Find",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CustomerServiceServer).FindOne(ctx, req.(*CustomerFindOneRequest))
+		return srv.(CustomerServiceServer).Find(ctx, req.(*CustomerFindRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -248,6 +276,42 @@ func _CustomerService_Delete_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CustomerService_SetExp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CustomerSetExpRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerServiceServer).SetExp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CustomerService/SetExp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerServiceServer).SetExp(ctx, req.(*CustomerSetExpRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CustomerService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CustomerLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerServiceServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CustomerService/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerServiceServer).Login(ctx, req.(*CustomerLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CustomerService_ServiceDesc is the grpc.ServiceDesc for CustomerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -260,8 +324,8 @@ var CustomerService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _CustomerService_Create_Handler,
 		},
 		{
-			MethodName: "FindOne",
-			Handler:    _CustomerService_FindOne_Handler,
+			MethodName: "Find",
+			Handler:    _CustomerService_Find_Handler,
 		},
 		{
 			MethodName: "FindAll",
@@ -278,6 +342,14 @@ var CustomerService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _CustomerService_Delete_Handler,
+		},
+		{
+			MethodName: "SetExp",
+			Handler:    _CustomerService_SetExp_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _CustomerService_Login_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
