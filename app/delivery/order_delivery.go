@@ -91,16 +91,12 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 	// we can not connect to proxied connection to each gRPC server
 	reqContext := ctx.Context()
 
-	products := []*pb.OrderProduct{}
-	for _, val := range payload.Product {
-		each := pb.OrderProduct{
-			ProductId:   val.ProductId,
-			Name:        val.Name,
-			Price:       val.Price,
-			Duration:    val.Duration,
-			Description: val.Description,
-		}
-		products = append(products, &each)
+	product := &pb.OrderProduct{
+		ProductId:   payload.Product.ProductId,
+		Name:        payload.Product.Name,
+		Price:       payload.Product.Price,
+		Duration:    payload.Product.Duration,
+		Description: payload.Product.Description,
 	}
 
 	buyer := &pb.OrderBuyer{
@@ -122,7 +118,7 @@ func (o *OrderDelivery) Create(ctx *fiber.Ctx) error {
 
 	values := &pb.OrderCreateRequest{
 		Buyer:   buyer,
-		Product: products,
+		Product: product,
 		Payment: payment,
 	}
 	_, err := o.usecase.Create(reqContext, values)

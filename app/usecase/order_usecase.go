@@ -54,7 +54,7 @@ func (o *OrderUsecase) ChangeStatus(ctx context.Context, req *pb.OrderChangeStat
 	return
 }
 
-func (o *OrderUsecase) FindOne(ctx context.Context, req *pb.OrderFindOneRequest) (res *pb.Order, err error) {
+func (o *OrderUsecase) FindOne(ctx context.Context, req *pb.OrderFindOneRequest) (res *pb.OrderFindOneResponse, err error) {
 	o.withTimeout(0, ctx, func(ctx context.Context) {
 		res, err = o.repository.FindOne(ctx, req)
 	})

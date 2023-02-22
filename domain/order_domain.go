@@ -21,13 +21,13 @@ type OrderProduct struct {
 
 type OrderRequest struct {
 	Buyer   OrderBuyer          `json:"buyer"`
-	Product []OrderProduct      `json:"product"`
+	Product OrderProduct        `json:"product"`
 	Payment BankTransferRequest `json:"payment"`
 }
 
 type OrderUsecase interface {
 	FindAll(context.Context, *pb.OrderFindAllRequest) (*pb.OrderFindAllResponse, error)
-	FindOne(context.Context, *pb.OrderFindOneRequest) (*pb.Order, error)
+	FindOne(context.Context, *pb.OrderFindOneRequest) (*pb.OrderFindOneResponse, error)
 	ChangeStatus(context.Context, *pb.OrderChangeStatus) (*pb.OperationResponse, error)
 	Create(ctx context.Context, req *pb.OrderCreateRequest) (*pb.Empty, error)
 	SumIncome(ctx context.Context, req *pb.OrderSumIncomeRequest) (res *pb.OrderSumResponse, err error)
@@ -36,7 +36,7 @@ type OrderUsecase interface {
 type OrderRepository interface {
 	Create(ctx context.Context, req *pb.OrderCreateRequest) (*pb.Empty, error)
 	FindAll(context.Context, *pb.OrderFindAllRequest) (*pb.OrderFindAllResponse, error)
-	FindOne(context.Context, *pb.OrderFindOneRequest) (*pb.Order, error)
+	FindOne(context.Context, *pb.OrderFindOneRequest) (*pb.OrderFindOneResponse, error)
 	ChangeStatus(context.Context, *pb.OrderChangeStatus) (*pb.OperationResponse, error)
 	SumIncome(ctx context.Context, req *pb.OrderSumIncomeRequest) (res *pb.OrderSumResponse, err error)
 }

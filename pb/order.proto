@@ -7,7 +7,7 @@ option go_package = "./pb";
 message Order {
     string order_id = 1;
     OrderBuyer buyer = 2;
-    repeated OrderProduct product = 3;
+    OrderProduct product = 3;
     OrderPayment payment = 4;
     string status = 5;
     int64 created_at = 6;
@@ -38,7 +38,7 @@ message OrderPayment {
 
 message OrderCreateRequest {
     OrderBuyer buyer = 1;
-    repeated OrderProduct product = 2;
+    OrderProduct product = 2;
     OrderPayment payment = 3;
 }
 
@@ -58,16 +58,22 @@ message OrderFindAllRequest {
     int64 perPage = 3;
     string search = 4;
     string status = 5;
-    bool count_only = 6;
+    string user_id = 6;
+    bool count_only = 7;
 }
 
-message OrderFindAllResponse {
+message OrderFindAllPayload {
     repeated Order orders = 1;
     int64 rows = 2;
     int64 pages = 3;
     int64 per_page = 4;
     int64 active_page = 5;
     int64 total = 6;
+}
+
+message OrderFindAllResponse {
+    bool is_empty = 1;
+    OrderFindAllPayload payload = 2;
 }
 
 message OrderSumIncomeRequest {
@@ -83,10 +89,15 @@ message OrderSumResponse {
     OrderSumPayload payload = 2;
 }
 
+message OrderFindOneResponse {
+    bool is_empty = 1;
+    Order payload = 2;
+}
+
 service OrderService {
     rpc Create(OrderCreateRequest) returns (Empty) {}
     rpc ChangeStatus(OrderChangeStatus) returns (OperationResponse) {}
-    rpc FindOne(OrderFindOneRequest) returns (Order) {}
+    rpc FindOne(OrderFindOneRequest) returns (OrderFindOneResponse) {}
     rpc FindAll(OrderFindAllRequest) returns (OrderFindAllResponse) {}
     rpc SumIncome(OrderSumIncomeRequest) returns (OrderSumResponse) {}
 }

@@ -30,7 +30,7 @@ func (o *OrderRepository) ChangeStatus(ctx context.Context, req *pb.OrderChangeS
 	return o.order.ChangeStatus(ctx, req)
 }
 
-func (o *OrderRepository) FindOne(ctx context.Context, req *pb.OrderFindOneRequest) (*pb.Order, error) {
+func (o *OrderRepository) FindOne(ctx context.Context, req *pb.OrderFindOneRequest) (*pb.OrderFindOneResponse, error) {
 	return o.order.FindOne(ctx, req)
 }
 
