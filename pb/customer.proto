@@ -61,13 +61,18 @@ message CustomerFindAllRequest {
     bool count_only = 6;
 }
 
-message CustomerFindAllResponse {
+message CustomerFindAllPayload {
     repeated Customer customers = 1;
     int64 rows = 2;
     int64 pages = 3;
     int64 per_page = 4;
     int64 active_page = 5;
     int64 total = 6;
+}
+
+message CustomerFindAllResponse {
+    bool is_empty = 1;
+    CustomerFindAllPayload payload = 2;
 }
 
 message CustomerChangeStatusRequest {
@@ -100,11 +105,18 @@ message CustomerLoginRequest {
 message CustomerLoginPayload {
     string customer_id = 1;
     string user = 2;
+    string name = 3;
 }
 
 message CustomerLoginResponse {
     bool is_empty = 1;
     CustomerLoginPayload payload = 2;
+}
+
+message CustomerUpdateCredsRequest {
+    string user = 1;
+    string pass = 2;
+    string new_pass = 3;
 }
 
 service CustomerService {
@@ -113,6 +125,7 @@ service CustomerService {
     rpc FindAll(CustomerFindAllRequest) returns (CustomerFindAllResponse) {}
     rpc ChangeStatus(CustomerChangeStatusRequest) returns (OperationResponse) {}
     rpc UpdateDetail(CustomerUpdateDetailRequest) returns (OperationResponse) {}
+    rpc UpdateCreds(CustomerUpdateCredsRequest) returns (OperationResponse) {}
     rpc Delete(CustomerDeleteRequest) returns (OperationResponse) {}
     rpc SetExp(CustomerSetExpRequest) returns (OperationResponse) {}
     rpc Login(CustomerLoginRequest) returns (CustomerLoginResponse) {}
