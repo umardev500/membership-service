@@ -20,7 +20,7 @@ func (p *ProductUsecase) Post(req *pb.ProductCreateRequest) error {
 	return p.repository.Post(req)
 }
 
-func (p *ProductUsecase) FindOne(req *pb.ProductFindOneRequest) (*pb.Product, error) {
+func (p *ProductUsecase) FindOne(req *pb.ProductFindOneRequest) (*pb.ProductFindOneResponse, error) {
 	return p.repository.FindOne(req)
 }
 

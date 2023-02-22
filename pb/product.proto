@@ -41,7 +41,7 @@ message ProductFindAllRequest {
     string search = 4;
 }
 
-message ProductFindAllResponse {
+message ProductFindAllPayload {
     repeated Product products = 1;
     int64 rows = 2;
     int64 pages = 3;
@@ -50,10 +50,20 @@ message ProductFindAllResponse {
     int64 total = 6;
 }
 
+message ProductFindAllResponse {
+    bool is_empty = 1;
+    ProductFindAllPayload payload = 2;
+}
+
+message ProductFindOneResponse {
+    bool is_empty = 1;
+    Product payload = 2;
+}
+
 service ProductService {
     rpc Create(ProductCreateRequest) returns (Empty) {}
     rpc Delete(ProductDeleteRequest) returns (OperationResponse) {}
     rpc Update(ProductUpdateRequest) returns (OperationResponse) {}
-    rpc FindOne(ProductFindOneRequest) returns (Product) {}
+    rpc FindOne(ProductFindOneRequest) returns (ProductFindOneResponse) {}
     rpc FindAll(ProductFindAllRequest) returns (ProductFindAllResponse) {}
 }

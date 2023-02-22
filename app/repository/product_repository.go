@@ -45,7 +45,7 @@ func (p *ProductRepository) Post(req *pb.ProductCreateRequest) (err error) {
 }
 
 // FindOne retrieves a single product from the repository.
-func (p *ProductRepository) FindOne(req *pb.ProductFindOneRequest) (res *pb.Product, err error) {
+func (p *ProductRepository) FindOne(req *pb.ProductFindOneRequest) (res *pb.ProductFindOneResponse, err error) {
 	p.withTimeout(0, func(ctx context.Context) {
 		res, err = p.product.FindOne(ctx, req)
 	})

@@ -7,7 +7,7 @@ type ProductUsecase interface {
 	// Post creates a new product.
 	Post(req *pb.ProductCreateRequest) error
 	// FindOne retrieves a single product from the repository.
-	FindOne(req *pb.ProductFindOneRequest) (res *pb.Product, err error)
+	FindOne(req *pb.ProductFindOneRequest) (res *pb.ProductFindOneResponse, err error)
 	// FindAll retrieves all products from the repository.
 	FindAll(req *pb.ProductFindAllRequest) (res *pb.ProductFindAllResponse, err error)
 	// Update updates a product in the repository.
@@ -21,7 +21,7 @@ type ProductRepository interface {
 	// Post creates a new product in the repository.
 	Post(req *pb.ProductCreateRequest) error
 	// FindOne retrieves a single product from the repository.
-	FindOne(req *pb.ProductFindOneRequest) (res *pb.Product, err error)
+	FindOne(req *pb.ProductFindOneRequest) (res *pb.ProductFindOneResponse, err error)
 	// FindAll retrieves all products from the repository.
 	FindAll(req *pb.ProductFindAllRequest) (res *pb.ProductFindAllResponse, err error)
 	// Update updates a product in the repository.
