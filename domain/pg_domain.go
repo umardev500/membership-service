@@ -36,6 +36,10 @@ type BankTransferRequest struct {
 		OrderId     string `json:"order_id,omitempty"`
 		GrossAmount int    `json:"gross_amount,omitempty"`
 	} `json:"transaction_details,omitempty"`
+	CustomExpiry *struct {
+		ExpiryDuration int    `json:"expiry_duration"`
+		Unit           string `json:"unit"`
+	} `json:"custom_expiry"`
 	CustomerDetails struct {
 		Email     string `json:"email,omitempty"`
 		FirstName string `json:"first_name,omitempty"`

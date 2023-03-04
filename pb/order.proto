@@ -12,6 +12,9 @@ message Order {
     string status = 5;
     int64 created_at = 6;
     int64 updated_at = 7;
+    int64 settlement_time = 8;
+    int64 trx_time = 9;
+    int64 pay_exp = 10;
 }
 
 message OrderProduct {
@@ -40,6 +43,8 @@ message OrderCreateRequest {
     OrderBuyer buyer = 1;
     OrderProduct product = 2;
     OrderPayment payment = 3;
+    int64 trx_time = 4;
+    int64 pay_exp = 5;
 }
 
 message OrderChangeStatus {
@@ -94,10 +99,16 @@ message OrderFindOneResponse {
     Order payload = 2;
 }
 
+message OrderCancelRequest {
+    string order_id = 1;
+    string user_id = 2;
+}
+
 service OrderService {
     rpc Create(OrderCreateRequest) returns (Empty) {}
     rpc ChangeStatus(OrderChangeStatus) returns (OperationResponse) {}
     rpc FindOne(OrderFindOneRequest) returns (OrderFindOneResponse) {}
     rpc FindAll(OrderFindAllRequest) returns (OrderFindAllResponse) {}
     rpc SumIncome(OrderSumIncomeRequest) returns (OrderSumResponse) {}
+    rpc Cancel(OrderCancelRequest) returns (OperationResponse) {}
 }
